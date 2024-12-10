@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from unittest.mock import patch, Mock
+from requests.exceptions import HTTPError
 import pytest
 
 
@@ -34,8 +35,9 @@ def test_a_bad_status_code_raises_an_error():
     response_mock = Mock()
     response_mock.status_code = test_resp_status
     response_mock.text = test_resp_text
-    with patch(f"{PATCH_PATH}.requests") as requests_mock:
-        requests_mock.get.return_value = response_mock
-        with pytest.raises(Exception) as err:
+    response_mock.raise_for_status.side_effect = HTTPError("404 It ain't here")
+    with patch(f"{PATCH_PATH}.requests.get") as requests_mock:
+        requests_mock.return_value = response_mock
+        with pytest.raises(HTTPError) as err:
             get_soup(test_url)
-    assert str(err.value) == "INSERT HTML ERROR WHEN YOU KNOW HOW TO MOCK THIS"
+    assert str(err.value) == "404 It ain't here"
