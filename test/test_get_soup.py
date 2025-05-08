@@ -4,7 +4,7 @@ from requests.exceptions import HTTPError
 import pytest
 
 
-from shared_utils.get_soup import get_soup
+from src.shared_utils.get_soup import get_soup
 
 PATCH_PATH = "src.get_soup"
 
