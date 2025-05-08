@@ -1,7 +1,7 @@
 import re
 
 
-from shared_utils.get_soup import get_soup
+from src.shared_utils.get_soup import get_soup
 
 
 def get_fixture_links(season: int, league: str):
