@@ -4,9 +4,9 @@ from requests.exceptions import HTTPError
 import pytest
 
 
-from shared_utils.get_soup import get_soup
+from src.shared_utils.get_soup import get_soup
 
-PATCH_PATH = "src.get_soup"
+PATCH_PATH = "src.shared_utils.get_soup"
 
 
 def test_soup_instance_is_returned_with_content_from_request_response():
