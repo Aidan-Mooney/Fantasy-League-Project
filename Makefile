@@ -6,7 +6,7 @@ endef
 
 create-environment:
 	@echo ">>> Setting up Venv"
-	python -m venv venv
+	python3 -m venv venv
 
 install-requirements: create-environment
 	@echo ">>> Installing requirements."
