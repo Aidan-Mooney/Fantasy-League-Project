@@ -16,8 +16,8 @@ def test_get_fixture_links_returns_list_of_strings(mock_requests_get):
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
-    assert isinstance(result, list)
+    result = get_fixture_links("Premier-League", 2025)
+    assert isinstance(result, set)
     for link in result:
         assert isinstance(link, str)
 
@@ -33,7 +33,7 @@ def test_get_fixture_links_returns_an_empty_list_if_no_match_links_are_found(
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
+    result = get_fixture_links("Premier-League", 2025)
     assert len(result) == 0
 
 
@@ -46,8 +46,8 @@ def test_get_fixture_links_works_with_one_match_link(mock_requests_get):
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
-    assert result == ["code1234"]
+    result = get_fixture_links("Premier-League", 2025)
+    assert result == {"code1234"}
 
 
 def test_get_fixture_links_works_with_one_match_link_with_duplicate(mock_requests_get):
@@ -60,8 +60,8 @@ def test_get_fixture_links_works_with_one_match_link_with_duplicate(mock_request
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
-    assert result == ["code1234"]
+    result = get_fixture_links("Premier-League", 2025)
+    assert result == {"code1234"}
 
 
 def test_get_fixture_links_works_with_multiple_duplicates(mock_requests_get):
@@ -80,8 +80,8 @@ def test_get_fixture_links_works_with_multiple_duplicates(mock_requests_get):
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
-    assert result == ["code1234", "code5678", "code9101", "code1121"]
+    result = get_fixture_links("Premier-League", 2025)
+    assert result == {"code1234", "code5678", "code9101", "code1121"}
 
 
 def test_get_fixture_links_ignores_none_match_links(mock_requests_get):
@@ -101,5 +101,5 @@ def test_get_fixture_links_ignores_none_match_links(mock_requests_get):
             </b>
         </html>
     """
-    result = get_fixture_links(2025, "Premier-League")
-    assert result == ["code1234", "code5678", "code9101", "code1121"]
+    result = get_fixture_links("Premier-League", 2025)
+    assert result == {"code1234", "code5678", "code9101", "code1121"}
