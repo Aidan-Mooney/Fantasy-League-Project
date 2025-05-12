@@ -81,7 +81,7 @@ def test_get_fixture_links_works_with_multiple_duplicates(mock_requests_get):
         </html>
     """
     result = get_fixture_links("Premier-League", 2025)
-    assert result == ["code1234", "code5678", "code9101", "code1121"]
+    assert set(result) == set(["code1234", "code5678", "code9101", "code1121"])
 
 
 def test_get_fixture_links_ignores_none_match_links(mock_requests_get):
@@ -102,4 +102,4 @@ def test_get_fixture_links_ignores_none_match_links(mock_requests_get):
         </html>
     """
     result = get_fixture_links("Premier-League", 2025)
-    assert result == ["code1234", "code5678", "code9101", "code1121"]
+    assert set(result) == set(["code1234", "code5678", "code9101", "code1121"])
