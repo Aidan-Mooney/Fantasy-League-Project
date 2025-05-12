@@ -1,5 +1,0 @@
-bandit
-ruff
-pytest
-pytest-testdox
-pytest-cov
