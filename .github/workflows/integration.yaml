@@ -45,14 +45,14 @@ jobs:
           uses: hashicorp/setup-terraform@v3
 
         - name: Terraform Init
-          working-directory: main-terraform
+          working-directory: terraform-dev
           run: terraform init
 
         - name: Terraform Validate
-          working-directory: main-terraform
+          working-directory: terraform-dev
           run: terraform validate
 
         - name: Terraform Plan
           id: plan
-          working-directory: main-terraform
+          working-directory: terraform-dev
           run: terraform plan
