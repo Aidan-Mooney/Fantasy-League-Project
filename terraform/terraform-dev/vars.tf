@@ -1,3 +1,3 @@
 variable "fbref_fixture_tracker-prefix" {
-  default = "fixture-processing-tracker"
+  default = "fixture-processing-tracker-"
 }

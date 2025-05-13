@@ -1,4 +1,4 @@
-name: Eshe-Honey-Project-Integrate
+name: Fantasy-League-Project-Integrate
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Run Checks
         run: make run-checks
 
-  test-terraform:
+  test-dev-terraform:
       name: test-terraform
       runs-on: ubuntu-latest
       environment: development
@@ -45,14 +45,14 @@ jobs:
           uses: hashicorp/setup-terraform@v3
 
         - name: Terraform Init
-          working-directory: terraform-dev
+          working-directory: terraform/terraform-dev
           run: terraform init
 
         - name: Terraform Validate
-          working-directory: terraform-dev
+          working-directory: terraform/terraform-dev
           run: terraform validate
 
         - name: Terraform Plan
           id: plan
-          working-directory: terraform-dev
+          working-directory: terraform/terraform-dev
           run: terraform plan
