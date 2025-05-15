@@ -1,0 +1,68 @@
+name: Fantasy-League-Project-Deploy
+
+on:
+  pull_request:
+    types: closed
+    branches:
+      - main
+    paths:
+      terraform/terraform-prod/**
+
+
+jobs:
+  run-python-tests:
+    name: run-python-tests
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Python Checks
+        run: make run-python-checks
+
+
+  deploy-prod-terraform:
+    name: deploy-prod-terraform
+    runs-on: ubuntu-latest
+    environment: production
+    needs: run-python-tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install external dependencies
+        run: make install-external-requirements
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: terraform/terraform-prod
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: terraform/terraform-prod
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: terraform/terraform-prod
+        run: terraform plan
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: terraform/terraform-prod
+        run: terraform apply -auto-approve
