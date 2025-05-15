@@ -20,7 +20,7 @@ install-dev-tools: create-environment
 	@echo ">>> Installing dev tools requirements"
 	$(call execute_in_env, pip install -r ./requirements/requirements-dev-tools.txt)
 
-run-checks: install-external-requirements install-lambda-requirements install-dev-tools
+run-python-checks: install-external-requirements install-lambda-requirements install-dev-tools
 	@echo ">>> Running pytest"
 	$(call execute_in_env, pytest --testdox -vvvrP --cov=src --cov-fail-under=90 test/*)
 	@echo ">>> Running security checks"
