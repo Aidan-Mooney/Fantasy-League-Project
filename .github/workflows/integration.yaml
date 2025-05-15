@@ -6,8 +6,8 @@ on:
       - "*"
 
 jobs:
-  run-tests:
-    name: run-tests
+  run-python-tests:
+    name: run-python-tests
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -19,14 +19,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run Checks
-        run: make run-checks
+      - name: Run Python Checks
+        run: make run-python-checks
 
   test-dev-terraform:
       name: test-terraform
       runs-on: ubuntu-latest
       environment: development
-      needs: run-tests
+      needs: run-python-tests
       steps:
         - name: Checkout
           uses: actions/checkout@v4
