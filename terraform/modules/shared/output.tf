@@ -4,7 +4,7 @@ output "code_bucket_name" {
 
 
 output "code_bucket_policy_arn" {
-  value = aws_iam_policy_document.s3_code_document.arn
+  value = data.aws_iam_policy_document.s3_code_document.arn
 }
 
 

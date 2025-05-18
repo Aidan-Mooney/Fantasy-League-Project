@@ -6,7 +6,7 @@ resource "aws_lambda_function" "ingest_lambda_function" {
   s3_key                = aws_s3_object.extract_fixture_links_lambda_file.id
   runtime               = var.python_runtime
   timeout               = var.timeout
-  handler               = "${locals.extract_fixture_links_name}.lambda_handler"
+  handler               = "${local.extract_fixture_links_name}.lambda_handler"
   description           = "Lambda function for extracting fbref match codes that have not already been processed."
   environment {
     variables = { 
