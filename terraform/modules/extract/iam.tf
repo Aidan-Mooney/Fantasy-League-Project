@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "extract_fixture_links_list_bucket_policy_documen
 resource "aws_iam_policy" "extract_fixture_links_list_bucket_policy" {
   name_prefix = "list-processed-codes-policy-"
   policy      = data.aws_iam_policy_document.extract_fixture_links_list_bucket_policy_document.json
-  description = "allows cloud service to access objects inside '${aws_s3_bucket.code_bucket.id}'."
+  description = "allows cloud service to access objects inside '${var.code_bucket.id}'."
 }
 
 
