@@ -1,5 +1,5 @@
 variable "code_bucket" {
-  type = string
+  description = "bucket for storing code"
 }
 
 
