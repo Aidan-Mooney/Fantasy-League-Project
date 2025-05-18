@@ -7,7 +7,7 @@ data "archive_file" "extract_fixture_links" {
 
 
 resource "aws_s3_object" "extract_fixture_links_lambda_file" {
-  bucket = var.code_bucket.bucket
+  bucket = var.code_bucket
   key    = "extract/get_fixture_links.zip"
   source = "${var.project_directory}/packages/get_fixture_links.zip"
   etag   = filemd5(data.archive_file.extract_fixture_links.output_path)
