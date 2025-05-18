@@ -25,6 +25,13 @@ data "aws_iam_policy_document" "extract_fixture_links_list_bucket_policy_documen
 }
 
 
+resource "aws_iam_policy" "extract_fixture_links_list_bucket_policy" {
+  name_prefix = "list-processed-codes-policy-"
+  policy      = data.aws_iam_policy_document.extract_fixture_links_list_bucket_policy_document.json
+  description = "allows cloud service to access objects inside '${aws_s3_bucket.code_bucket.id}'."
+}
+
+
 resource "aws_iam_role_policy_attachment" "extract_fixture_links_code_policy" {
   role       = aws_iam_role.extract_fixture_links_role.name
   policy_arn = var.code_bucket_get_object_policy_arn
@@ -33,5 +40,5 @@ resource "aws_iam_role_policy_attachment" "extract_fixture_links_code_policy" {
 
 resource "aws_iam_role_policy_attachment" "extract_fixture_links_list_bucket_content_policy" {
   role       = aws_iam_role.extract_fixture_links_role.name
-  policy_arn = aws_iam_policy_document.extract_fixture_links_list_bucket_policy_document.arn
+  policy_arn = aws_iam_policy.extract_fixture_links_list_bucket_policy.arn
 }
