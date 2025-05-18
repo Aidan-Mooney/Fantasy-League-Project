@@ -3,11 +3,6 @@ variable "code_bucket" {
 }
 
 
-variable "src_path" {
-  type = string
-}
-
-
-variable "package_path" {
+variable "project_directory" {
   type = string
 }
