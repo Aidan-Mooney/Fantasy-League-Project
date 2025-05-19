@@ -20,6 +20,7 @@ data "archive_file" "externals"{
   output_file_mode = "0666"
   source_dir       = "${var.project_directory}/layers/externals/python"
   output_path      = "${var.project_directory}/packages/externals.zip"
+  depends_on       = [resource.null_resource.create_dependencies]
 }
 
 
