@@ -13,6 +13,6 @@ module "extract" {
   python_runtime                    = local.python_runtime
   timeout                           = local.timeout
   processed_codes_bucket_arn        = module.shared.processed_codes_arn
-  externals_arn                     = module.shared.externals_arn
-  util_layer_arn                    = module.shared.util_layer_arn
+  externals_arn                     = module.shared.externals_layer_arn
+  util_layer_arn                    = module.shared.util_layer_layer_arn
 }
