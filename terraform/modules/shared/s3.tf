@@ -42,6 +42,6 @@ resource "aws_s3_object" "externals_file" {
 resource "aws_s3_object" "shared_utils_file" {
   bucket = aws_s3_bucket.code_bucket.bucket
   key    = "shared/shared_utils.zip"
-  source = "${var.project_directory}/packages/shared_util.zip"
-  etag   = filemd5(data.archive_file.shared_util.output_path)
+  source = "${var.project_directory}/packages/shared_utils.zip"
+  etag   = filemd5(data.archive_file.shared_utils.output_path)
 }
