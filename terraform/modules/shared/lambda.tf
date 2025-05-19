@@ -14,6 +14,7 @@ resource "aws_lambda_layer_version" "externals" {
   compatible_runtimes = [var.python_runtime]
   s3_bucket           = aws_s3_object.externals_file.bucket
   s3_key              = aws_s3_object.externals_file.key
+  depends_on          = [resource.null_resource.create_dependencies]
   source_code_hash    = data.archive_file.externals.output_base64sha256
   description         = "Lambda layer containing project external requirements."
 }
