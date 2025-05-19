@@ -7,7 +7,7 @@ from requests.exceptions import HTTPError
 from botocore.exceptions import ClientError
 
 
-from src.shared_utils.get_soup import get_soup
+from get_soup import get_soup
 
 
 basicConfig(level=INFO)
