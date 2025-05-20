@@ -14,7 +14,7 @@ resource "aws_lambda_function" "extract_fixture_links" {
   description           = "Lambda function for extracting fbref match codes that have not already been processed."
   environment {
     variables = { 
-      EXTRACT_BUCKET = var.processed_codes_bucket_arn
+      EXTRACT_BUCKET = var.processed_codes_bucket_name
     }
   }
   logging_config {
