@@ -1,14 +1,3 @@
-resource "null_resource" "create_dependencies" {
-  provisioner "local-exec" {
-    command = "pip install -r ${var.project_directory}/requirements/requirements-external.txt -t ${var.project_directory}/layers/externals/python"
-  }
-
-  triggers = {
-    dependencies = filemd5("${var.project_directory}/requirements/requirements-external.txt")
-  }
-}
-
-
 resource "aws_lambda_layer_version" "externals" {
   layer_name          = "externals"
   compatible_runtimes = [var.python_runtime]
