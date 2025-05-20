@@ -1,8 +1,8 @@
-variable "code_bucket_prefix" {
-  default = "code-bucket-"
+variable "project_directory" {
+  type = string
 }
 
 
-variable "fbref_fixture_tracker_prefix" {
-  default = "fixture-processing-tracker-"
+variable "python_runtime" {
+  type = string
 }

@@ -1,10 +1,10 @@
-variable "code_bucket" {
-  description = "bucket for storing code"
+variable "project_directory" {
+  type = string
 }
 
 
-variable "project_directory" {
-  type = string
+variable "code_bucket" {
+  description = "bucket for storing code"
 }
 
 
@@ -25,5 +25,15 @@ variable "timeout" {
 
 
 variable "processed_codes_bucket_arn" {
+  type = string
+}
+
+
+variable "util_layer_arn" {
+  type = string
+}
+
+
+variable "externals_arn" {
   type = string
 }
