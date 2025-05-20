@@ -21,3 +21,8 @@ output "externals_layer_arn" {
 output "shared_utils_layer_arn" {
   value = aws_lambda_layer_version.shared_utils.arn
 }
+
+
+output "log_group_name" {
+  value = aws_cloudwatch_log_group.fantasy-league-project-cw-log-group.name
+}
