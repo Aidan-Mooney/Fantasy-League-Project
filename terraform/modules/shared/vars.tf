@@ -1,3 +1,8 @@
-variable "fbref_fixture_tracker-prefix" {
-  default = "fixture-processing-tracker-"
+variable "project_directory" {
+  type = string
+}
+
+
+variable "python_runtime" {
+  type = string
 }
