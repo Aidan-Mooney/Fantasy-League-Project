@@ -15,4 +15,5 @@ module "extract" {
   processed_codes_bucket_arn        = module.shared.processed_codes_arn
   externals_arn                     = module.shared.externals_layer_arn
   util_layer_arn                    = module.shared.shared_utils_layer_arn
+  log_group_name                    = module.shared.log_group_name
 }

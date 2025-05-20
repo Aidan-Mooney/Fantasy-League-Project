@@ -17,4 +17,8 @@ resource "aws_lambda_function" "ingest_lambda_function" {
       EXTRACT-BUCKET = var.processed_codes_bucket_arn
     }
   }
+  logging_config {
+    log_format  = "Text"
+    log_group   = var.log_group_name
+  }
 }

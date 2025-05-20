@@ -37,3 +37,8 @@ variable "util_layer_arn" {
 variable "externals_arn" {
   type = string
 }
+
+
+variable "log_group_name" {
+  type = string
+}
