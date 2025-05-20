@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 define execute_in_env
-	export PYTHONPATH=.:./layers/shared_utils/python && source venv/bin/activate && $1
+	export PYTHONPATH=. && source venv/bin/activate && $1
 endef
 
 create-environment:

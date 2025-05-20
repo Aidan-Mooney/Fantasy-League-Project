@@ -3,7 +3,7 @@ from requests.exceptions import HTTPError
 import pytest
 
 
-from get_soup import get_soup
+from src.shared_utils.get_soup import get_soup
 
 
 def test_soup_returns_beautiful_soup_instance(mock_requests_get):

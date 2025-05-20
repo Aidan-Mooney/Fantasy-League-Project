@@ -22,7 +22,7 @@ def s3_client(aws_credentials):
 
 @fixture
 def mock_requests_get():
-    with patch("get_soup.requests.get") as mock_get:
+    with patch("src.shared_utils.get_soup.requests.get") as mock_get:
         mock_response = Mock()
         mock_response.raise_for_status = Mock()
         mock_response.status_code = 200
