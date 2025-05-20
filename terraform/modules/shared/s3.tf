@@ -33,16 +33,18 @@ data "archive_file" "shared_utils"{
 
 
 resource "aws_s3_object" "externals_file" {
-  bucket = aws_s3_bucket.code_bucket.bucket
-  key    = "shared/externals.zip"
-  source = "${var.project_directory}/packages/externals.zip"
-  etag   = filemd5(data.archive_file.externals.output_path)
+  bucket     = aws_s3_bucket.code_bucket.bucket
+  key        = "shared/externals.zip"
+  source     = "${var.project_directory}/packages/externals.zip"
+  etag       = filemd5(data.archive_file.externals.output_path)
+  depends_on = [data.archive_file.externals]
 }
 
 
 resource "aws_s3_object" "shared_utils_file" {
-  bucket = aws_s3_bucket.code_bucket.bucket
-  key    = "shared/shared_utils.zip"
-  source = "${var.project_directory}/packages/shared_utils.zip"
-  etag   = filemd5(data.archive_file.shared_utils.output_path)
+  bucket     = aws_s3_bucket.code_bucket.bucket
+  key        = "shared/shared_utils.zip"
+  source     = "${var.project_directory}/packages/shared_utils.zip"
+  etag       = filemd5(data.archive_file.shared_utils.output_path)
+  depends_on = [data.archive_file.shared_utils]
 }
