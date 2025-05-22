@@ -31,4 +31,4 @@ run-python-checks: install-external-requirements install-lambda-requirements ins
 
 prepare-external-requirements-zip: create-environment
 	@echo ">>> Preparing the external requirements for packaging."
-	$(call execute_in_env, pip install -r ./requirements/requirements-external.txt -t ./packages/externals/python)
+	$(call execute_in_env, pip install -r ./requirements/requirements-external.txt -t ./layers/externals/python)
