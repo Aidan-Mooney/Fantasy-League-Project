@@ -18,16 +18,15 @@ resource "aws_s3_bucket" "fbref_fixture_tracker" {
 data "archive_file" "externals"{
   type             = "zip"
   output_file_mode = "0666"
-  source_dir       = "${var.project_directory}/layers/externals/python"
+  source_dir       = "${var.project_directory}/layers/externals"
   output_path      = "${var.project_directory}/packages/externals.zip"
-  depends_on       = [resource.null_resource.create_dependencies]
 }
 
 
 data "archive_file" "shared_utils"{
   type             = "zip"
   output_file_mode = "0666"
-  source_dir       = "${var.project_directory}/layers/shared_utils/python"
+  source_dir       = "${var.project_directory}/layers/shared_utils"
   output_path      = "${var.project_directory}/packages/shared_utils.zip"
 }
 

@@ -24,6 +24,11 @@ variable "timeout" {
 }
 
 
+variable "processed_codes_bucket_name"{
+  type = string
+}
+
+
 variable "processed_codes_bucket_arn" {
   type = string
 }

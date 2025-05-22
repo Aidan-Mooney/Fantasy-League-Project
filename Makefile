@@ -28,3 +28,7 @@ run-python-checks: install-external-requirements install-lambda-requirements ins
 	@echo ">>> Running ruff"
 	$(call execute_in_env, ruff check src)
 	$(call execute_in_env, ruff check test)
+
+prepare-external-requirements-zip: create-environment
+	@echo ">>> Preparing the external requirements for packaging."
+	$(call execute_in_env, pip install -r ./requirements/requirements-external.txt -t ./layers/externals/python)
