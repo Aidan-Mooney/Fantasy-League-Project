@@ -22,7 +22,7 @@ def create_bucket(s3_client):
         Bucket=TEST_BUCKET,
         CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
     )
-    environ["EXTRACT-BUCKET"] = TEST_BUCKET
+    environ["EXTRACT_BUCKET"] = TEST_BUCKET
 
 
 @fixture(scope="function")
