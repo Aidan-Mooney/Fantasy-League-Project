@@ -19,7 +19,7 @@ provider "aws"{
       ProjectName   = "Fantasy League Project"
       DeployedFrom  = "Terraform"
       Repository    = "Fantasy-League-Project"
-      Environment   = local.stage
+      Environment   = "Dev"
     }
   }
 }
