@@ -1,13 +1,5 @@
-resource "aws_s3_bucket" "code_bucket" {
-  bucket_prefix = local.code_bucket_prefix
-  tags = {
-    purpose = "holds python code for lambda files."
-  }
-}
-
-
 resource "aws_s3_bucket" "fbref_fixture_tracker" {
-  bucket_prefix = local.fbref_fixture_tracker_prefix
+  bucket_prefix = var.fbref_fixture_tracker-prefix
   tags = {
     step = "extract"
     purpose = "hold codes of matches that have been processed."
@@ -18,16 +10,15 @@ resource "aws_s3_bucket" "fbref_fixture_tracker" {
 data "archive_file" "externals"{
   type             = "zip"
   output_file_mode = "0666"
-  source_dir       = "${var.project_directory}/layers/externals/python"
+  source_dir       = "${var.project_directory}/layers/externals"
   output_path      = "${var.project_directory}/packages/externals.zip"
-  depends_on       = [resource.null_resource.create_dependencies]
 }
 
 
 data "archive_file" "shared_utils"{
   type             = "zip"
   output_file_mode = "0666"
-  source_dir       = "${var.project_directory}/layers/shared_utils/python"
+  source_dir       = "${var.project_directory}/layers/shared_utils"
   output_path      = "${var.project_directory}/packages/shared_utils.zip"
 }
 

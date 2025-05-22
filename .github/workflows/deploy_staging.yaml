@@ -32,8 +32,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install external dependencies
-        run: make install-external-requirements
+      - name: Prepare externals lambda layer
+        run: make prepare-externals-lambda-layer
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

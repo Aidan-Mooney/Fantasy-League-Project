@@ -1,5 +1,5 @@
 locals {
-  stage = "dev"
+  stage = "prod"
 }
 
 
