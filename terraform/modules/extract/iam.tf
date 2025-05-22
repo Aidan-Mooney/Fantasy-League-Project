@@ -19,8 +19,8 @@ data "aws_iam_policy_document" "assume_lambda_role_document" {
 
 data "aws_iam_policy_document" "extract_fixture_links_list_bucket_policy_document" {
   statement {
-    actions   = ["s3:ListObject"]
-    resources = ["${var.processed_codes_bucket_arn}"]
+    actions   = ["s3:ListBucket"]
+    resources = [var.processed_codes_bucket_arn]
   }
 }
 
