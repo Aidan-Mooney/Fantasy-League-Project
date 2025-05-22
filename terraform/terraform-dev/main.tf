@@ -1,5 +1,6 @@
 module "shared" {
   source            = "../modules/shared"
+  stage             = local.stage
   project_directory = local.project_directory
   python_runtime    = local.python_runtime
 }

@@ -1,3 +1,8 @@
+variable "stage" {
+  type = string
+}
+
+
 variable "project_directory" {
   type = string
 }
