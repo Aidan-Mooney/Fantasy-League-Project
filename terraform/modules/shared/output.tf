@@ -9,7 +9,7 @@ output "code_bucket_policy_arn" {
 
 
 output processed_codes_name {
-  value = aws_s3_bucket.fbref_fixture_tracker.arn
+  value = aws_s3_bucket.fbref_fixture_tracker.name
 }
 
 output "processed_codes_arn" {
