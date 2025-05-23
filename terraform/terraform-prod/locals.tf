@@ -1,6 +1,8 @@
 locals {
+  project_name = "fpl"
   stage = "prod"
 }
+
 
 
 locals {

@@ -1,4 +1,5 @@
 locals {
+  project_name = "fpl"
   stage = "dev"
 }
 

@@ -1,12 +1,13 @@
 module "shared" {
   source            = "../modules/shared"
-  stage             = local.stage
+  project_prefix    = "${local.project_name}-${local.stage}"
   project_directory = local.project_directory
   python_runtime    = local.python_runtime
 }
 
 
 module "extract" {
+  project_prefix                    = "${local.project_name}-${local.stage}"
   source                            = "../modules/extract"
   project_directory                 = local.project_directory
   code_bucket                       = module.shared.code_bucket_name

@@ -1,4 +1,4 @@
-variable "stage" {
+variable "project_prefix" {
   type = string
 }
 
