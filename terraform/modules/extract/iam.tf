@@ -1,5 +1,5 @@
 resource "aws_iam_role" "extract_fixture_links_role" {
-  name_prefix        = "role-${local.extract_fixture_links_name}"
+  name_prefix        = "${var.project_prefix}-role-${local.extract_fixture_links_name}"
   assume_role_policy = data.aws_iam_policy_document.assume_lambda_role_document.json
   description        = "IAM role used by '${local.extract_fixture_links_name}' lambda function."
 }
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "extract_fixture_links_list_bucket_policy_documen
 
 
 resource "aws_iam_policy" "extract_fixture_links_list_bucket_policy" {
-  name_prefix = "list-processed-codes-policy-"
+  name_prefix = "${var.project_prefix}-list-processed-codes-policy-"
   policy      = data.aws_iam_policy_document.extract_fixture_links_list_bucket_policy_document.json
   description = "allows cloud service to access objects inside the processed codes bucket."
 }
