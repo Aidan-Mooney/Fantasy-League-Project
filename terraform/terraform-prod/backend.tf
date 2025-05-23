@@ -16,7 +16,7 @@ provider "aws"{
   region = "eu-west-2"
   default_tags {
     tags={
-      ProjectName   = "Fantasy League Project"
+      ProjectName   = local.project_name
       DeployedFrom  = "Terraform"
       Repository    = "Fantasy-League-Project"
       Environment   = local.stage

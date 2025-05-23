@@ -1,5 +1,6 @@
 locals {
-  stage = "dev"
+  project_name = "Fantasy-League-Project"
+  stage = "DEV"
 }
 
 

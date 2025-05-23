@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "code_bucket" {
-  bucket_prefix = local.code_bucket_prefix
+  bucket_prefix = "${var.project_prefix}-${local.code_bucket_prefix}"
   tags = {
     purpose = "holds python code for lambda files."
   }
@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "code_bucket" {
 
 
 resource "aws_s3_bucket" "fbref_fixture_tracker" {
-  bucket_prefix = local.fbref_fixture_tracker_prefix
+  bucket_prefix = "${var.project_prefix}-${local.fbref_fixture_tracker_prefix}"
   tags = {
     step = "extract"
     purpose = "hold codes of matches that have been processed."
@@ -44,5 +44,4 @@ resource "aws_s3_object" "shared_utils_file" {
   key        = "shared/shared_utils.zip"
   source     = data.archive_file.shared_utils.output_path
   etag       = data.archive_file.shared_utils.output_md5
-  depends_on = [data.archive_file.shared_utils]
 }
