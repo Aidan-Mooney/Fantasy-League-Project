@@ -1,4 +1,4 @@
-from src.extract_fixtures.get_fixture_links import get_url_and_regex
+from extract.extract_fbref.get_match_codes import get_url_and_regex
 
 
 def test_get_url_and_regex_returns_a_tuple_containing_two_strings():

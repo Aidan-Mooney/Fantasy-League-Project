@@ -3,10 +3,10 @@ from os import environ
 from unittest.mock import patch
 
 
-from src.extract_fixtures.get_fixture_links import get_processed_codes
+from extract.extract_fbref.get_match_codes import get_processed_codes
 
 
-MODULE_PATH = "src.extract_fixtures.get_fixture_links"
+MODULE_PATH = "extract.extract_fbref.get_match_codes"
 TEST_BUCKET = "fixture-processing-tracker"
 
 

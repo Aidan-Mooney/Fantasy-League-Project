@@ -32,16 +32,16 @@ data "archive_file" "shared_utils"{
 
 
 resource "aws_s3_object" "externals_file" {
-  bucket     = aws_s3_bucket.code_bucket.bucket
-  key        = "shared/externals.zip"
-  source     = data.archive_file.externals.output_path
-  etag       = data.archive_file.externals.output_md5
+  bucket = aws_s3_bucket.code_bucket.bucket
+  key    = "shared/externals.zip"
+  source = data.archive_file.externals.output_path
+  etag   = data.archive_file.externals.output_md5
 }
 
 
 resource "aws_s3_object" "shared_utils_file" {
-  bucket     = aws_s3_bucket.code_bucket.bucket
-  key        = "shared/shared_utils.zip"
-  source     = data.archive_file.shared_utils.output_path
-  etag       = data.archive_file.shared_utils.output_md5
+  bucket = aws_s3_bucket.code_bucket.bucket
+  key    = "shared/shared_utils.zip"
+  source = data.archive_file.shared_utils.output_path
+  etag   = data.archive_file.shared_utils.output_md5
 }

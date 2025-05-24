@@ -1,3 +1,3 @@
 locals {
-  extract_fixture_links_name = "extract-fixture-links"
+  get_match_codes_name = "get_match_codes"
 }
