@@ -1,7 +1,7 @@
 from pytest import raises
 
 
-from src.extract_fixtures.get_fixture_links import validate_event
+from extract.extract_fbref.get_match_codes import validate_event
 
 
 def test_validate_event_returns_none():

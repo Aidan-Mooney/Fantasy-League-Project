@@ -15,7 +15,7 @@ logger = getLogger(__name__)
 s3_client = client("s3")
 
 
-def lambda_handler(event: dict, context: dict) -> List[str]:
+def get_match_codes(event: dict, context: dict) -> List[str]:
     try:
         validate_event(event)
     except TypeError as err:
@@ -25,7 +25,7 @@ def lambda_handler(event: dict, context: dict) -> List[str]:
     league = event["league"]
     season = event["season"]
     try:
-        all_links = get_fixture_links(league, season)
+        all_links = get_all_codes(league, season)
     except HTTPError as err:
         logger.critical(
             "Failed to get fixture links for league=%s, season=%d: %s",
@@ -67,7 +67,7 @@ def validate_event(event: dict) -> None:
         raise TypeError("season value must be an int")
 
 
-def get_fixture_links(league: str, season: int) -> List[str]:
+def get_all_codes(league: str, season: int) -> List[str]:
     url, regex_string = get_url_and_regex(league, season)
     soup = get_soup(url)
     link_condition = re.compile(regex_string)
