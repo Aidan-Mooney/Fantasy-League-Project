@@ -6,31 +6,31 @@ from requests.models import Response
 from botocore.exceptions import ClientError
 
 
-from src.extract_fixtures.get_fixture_links import lambda_handler
+from extract.extract_fbref.get_match_codes import get_match_codes
 
 
-MODULE_PATH = "src.extract_fixtures.get_fixture_links"
+MODULE_PATH = "extract.extract_fbref.get_match_codes"
 
 
 @fixture(scope="function")
 def mock_get_fixtures():
     with (
-        patch(f"{MODULE_PATH}.get_fixture_links") as mock_get_fixture_links,
+        patch(f"{MODULE_PATH}.get_all_codes") as mock_get_all_codes,
         patch(f"{MODULE_PATH}.get_processed_codes") as mock_get_processed_code,
     ):
-        yield mock_get_fixture_links, mock_get_processed_code
+        yield mock_get_all_codes, mock_get_processed_code
 
 
-class TestLambdaHandlerFunctionality:
-    def test_lambda_handler_returns_correct_types(self, mock_get_fixtures):
+class TestGetMatchCodesFunctionality:
+    def test_get_match_codes_returns_correct_types(self, mock_get_fixtures):
         test_league = "Premier-League"
         test_season = 2025
-        mock_flinks, mock_proc_codes = mock_get_fixtures
-        mock_flinks.return_value = ["code1234", "code5678"]
+        mock_all_codes, mock_proc_codes = mock_get_fixtures
+        mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = ["code1234"]
         test_event = {"league": test_league, "season": test_season}
         test_context = None
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
         assert len(result) == 3
         assert isinstance(result["success"], bool)
@@ -39,20 +39,20 @@ class TestLambdaHandlerFunctionality:
         for link in result["links"]:
             assert isinstance(link, str)
 
-    def test_lambda_handler_returns_empty_list_if_no_match_links_were_found(
+    def test_get_match_codes_returns_empty_list_if_no_match_links_were_found(
         self,
         caplog,
         mock_get_fixtures,
     ):
         test_league = "Premier-League"
         test_season = 2025
-        mock_flinks, mock_proc_codes = mock_get_fixtures
-        mock_flinks.return_value = []
+        mock_all_codes, mock_proc_codes = mock_get_fixtures
+        mock_all_codes.return_value = []
         mock_proc_codes.return_value = []
         test_event = {"league": test_league, "season": test_season}
         test_context = None
         caplog.set_level(INFO)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert result["success"]
         assert len(result["links"]) == 0
         assert result["count"] == 0
@@ -61,20 +61,20 @@ class TestLambdaHandlerFunctionality:
             in caplog.text
         )
 
-    def test_lambda_handler_returns_the_ouput_of_get_fixture_links_if_bucket_is_empty(
+    def test_get_match_codes_returns_the_ouput_of_get_all_codes_if_bucket_is_empty(
         self,
         caplog,
         mock_get_fixtures,
     ):
         test_league = "Premier-League"
         test_season = 2025
-        mock_flinks, mock_proc_codes = mock_get_fixtures
-        mock_flinks.return_value = ["code1234", "code5678"]
+        mock_all_codes, mock_proc_codes = mock_get_fixtures
+        mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = []
         test_event = {"league": test_league, "season": test_season}
         test_context = None
         caplog.set_level(INFO)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert result["success"]
         assert set(result["links"]) == {"code1234", "code5678"}
         assert result["count"] == 2
@@ -83,18 +83,18 @@ class TestLambdaHandlerFunctionality:
             in caplog.text
         )
 
-    def test_lambda_handler_returns_only_codes_that_arent_in_bucket(
+    def test_get_match_codes_returns_only_codes_that_arent_in_bucket(
         self, caplog, mock_get_fixtures
     ):
         test_league = "Premier-League"
         test_season = 2025
-        mock_flinks, mock_proc_codes = mock_get_fixtures
-        mock_flinks.return_value = ["code1234", "code5678", "code1011"]
+        mock_all_codes, mock_proc_codes = mock_get_fixtures
+        mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.return_value = ["code1234"]
         test_event = {"league": test_league, "season": test_season}
         test_context = None
         caplog.set_level(INFO)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert result["success"]
         assert set(result["links"]) == {"code5678", "code1011"}
         assert result["count"] == 2
@@ -104,12 +104,12 @@ class TestLambdaHandlerFunctionality:
         )
 
 
-class TestLambdaHandlerLogsErrors:
-    def test_lambda_handler_logs_an_invalid_event(self, caplog):
+class TestGetMatchCodesLogsErrors:
+    def test_get_match_codes_logs_an_invalid_event(self, caplog):
         test_event = {"invalid": "oh dear"}
         test_context = None
         caplog.set_level(CRITICAL)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert not result["success"]
         assert len(result["links"]) == 0
         assert (
@@ -120,11 +120,11 @@ class TestLambdaHandlerLogsErrors:
             in caplog.text
         )
 
-    def test_lambda_handler_logs_a_bad_http_request(self, caplog, mock_get_fixtures):
+    def test_get_match_codes_logs_a_bad_http_request(self, caplog, mock_get_fixtures):
         test_league = "Premier-League"
         test_season = 2025
         test_url = f"https://fbref.com/en/comps/9/{test_season - 1}-{test_season}/schedule/{test_season - 1}-{test_season}-{test_league}-Scores-and-Fixtures"
-        mock_flinks, _ = mock_get_fixtures
+        mock_all_codes, _ = mock_get_fixtures
         response = Response()
         response.status_code = 403
         response.url = test_url
@@ -132,11 +132,11 @@ class TestLambdaHandlerLogsErrors:
         error = HTTPError(
             f"403 Client Error: Forbidden for url: {response.url}", response=response
         )
-        mock_flinks.side_effect = error
+        mock_all_codes.side_effect = error
         test_event = {"league": test_league, "season": test_season}
         test_context = None
         caplog.set_level(CRITICAL)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert not result["success"]
         assert len(result["links"]) == 0
         assert result["error"] == f"403 Client Error: Forbidden for url: {test_url}"
@@ -145,10 +145,10 @@ class TestLambdaHandlerLogsErrors:
             in caplog.text
         )
 
-    def test_lambda_handler_logs_a_s3_client_error(self, caplog, mock_get_fixtures):
+    def test_get_match_codes_logs_a_s3_client_error(self, caplog, mock_get_fixtures):
         test_league = "Premier-League"
         test_season = 2025
-        mock_flinks, mock_proc_codes = mock_get_fixtures
+        mock_all_codes, mock_proc_codes = mock_get_fixtures
         error_response = {
             "Error": {
                 "Code": "InternalServiceError",
@@ -158,12 +158,12 @@ class TestLambdaHandlerLogsErrors:
         }
         operation_name = "ListObjectsV2"
         error = ClientError(error_response, operation_name)
-        mock_flinks.return_value = ["code1234", "code5678", "code1011"]
+        mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.side_effect = error
         test_event = {"league": test_league, "season": test_season}
         test_context = None
         caplog.set_level(CRITICAL)
-        result = lambda_handler(test_event, test_context)
+        result = get_match_codes(test_event, test_context)
         assert not result["success"]
         assert len(result["links"]) == 0
         assert (

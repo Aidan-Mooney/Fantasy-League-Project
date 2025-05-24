@@ -1,15 +1,15 @@
-data "archive_file" "extract_fixture_links" {
+data "archive_file" "get_match_codes" {
   type             = "zip"
   output_file_mode = "0666"
-  source_file      = "${var.project_directory}/src/extract_fixtures/get_fixture_links.py"
-  output_path      = "${var.project_directory}/packages/get_fixture_links.zip"
+  source_file      = "${var.project_directory}/src/extract/extract_fbref/get_match_codes.py"
+  output_path      = "${var.project_directory}/packages/get_match_codes.zip"
 }
 
 
-resource "aws_s3_object" "extract_fixture_links_file" {
+resource "aws_s3_object" "get_match_codes_file" {
   bucket = var.code_bucket
-  key    = "extract/get_fixture_links.zip"
-  source = "${var.project_directory}/packages/get_fixture_links.zip"
-  etag   = filemd5(data.archive_file.extract_fixture_links.output_path)
+  key    = "extract/extract_fbref/get_match_codes.zip"
+  source = data.archive_file.get_match_codes.output_path
+  etag   = data.archive_file.get_match_codes.output_md5
 }
 
