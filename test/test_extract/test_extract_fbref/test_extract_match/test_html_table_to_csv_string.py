@@ -98,7 +98,7 @@ def test_html_table_to_csv_string_returns_table_with_headers_and_multiple_rows_c
     assert result == expected
 
 
-def test_html_table_to_csv_string_returns_table_with_nested_headers_correctly(
+def test_html_table_to_csv_string_returns_table_with_two_dimensional_headers_correctly(
     soup_input_helper,
 ):
     input_html = """
@@ -146,4 +146,59 @@ def test_html_table_to_csv_string_returns_table_with_nested_headers_correctly(
     )
     result = html_table_to_csv_string(input_val)
     print(result)
+    assert result == expected
+
+
+def test_html_table_to_csv_string_returns_table_with_one_requested_col(
+    soup_input_helper,
+):
+    input_html = """
+    <table>
+        <thead>
+            <tr><th>ColA</th><th>ColB</th><th>ColC</th><th>ColD</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Row1A</td><td>Row1B</td><td>Row1C</td><td>Row1D</td></tr>
+            <tr><td>Row2A</td><td>Row2B</td><td>Row2C</td><td>Row2D</td></tr>
+            <tr><td>Row3A</td><td>Row3B</td><td>Row3C</td><td>Row3D</td></tr>
+            <tr><td>Row4A</td><td>Row4B</td><td>Row4C</td><td>Row4D</td></tr>
+            <tr><td>Row5A</td><td>Row5B</td><td>Row5C</td><td>Row5D</td></tr>
+        </tbody>
+    </table>
+    """
+    input_val = soup_input_helper(input_html)
+    input_col = ["ColA"]
+    expected = "ColA\n" + "Row1A\n" + "Row2A\n" + "Row3A\n" + "Row4A\n" + "Row5A\n"
+    result = html_table_to_csv_string(input_val, input_col)
+    assert result == expected
+
+
+def test_html_table_to_csv_string_returns_table_with_many_requested_cols(
+    soup_input_helper,
+):
+    input_html = """
+    <table>
+        <thead>
+            <tr><th>ColA</th><th>ColB</th><th>ColC</th><th>ColD</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Row1A</td><td>Row1B</td><td>Row1C</td><td>Row1D</td></tr>
+            <tr><td>Row2A</td><td>Row2B</td><td>Row2C</td><td>Row2D</td></tr>
+            <tr><td>Row3A</td><td>Row3B</td><td>Row3C</td><td>Row3D</td></tr>
+            <tr><td>Row4A</td><td>Row4B</td><td>Row4C</td><td>Row4D</td></tr>
+            <tr><td>Row5A</td><td>Row5B</td><td>Row5C</td><td>Row5D</td></tr>
+        </tbody>
+    </table>
+    """
+    input_val = soup_input_helper(input_html)
+    input_col = ["ColA", "ColB"]
+    expected = (
+        "ColA,ColB\n"
+        + "Row1A,Row1B\n"
+        + "Row2A,Row2B\n"
+        + "Row3A,Row3B\n"
+        + "Row4A,Row4B\n"
+        + "Row5A,Row5B\n"
+    )
+    result = html_table_to_csv_string(input_val, input_col)
     assert result == expected

@@ -33,31 +33,41 @@ def process_match_tables(raw_html_tables):
     return
 
 
-def html_table_to_csv_string(table):
+def html_table_to_csv_string(table, cols=None):
     header_rows = table.find("thead").find_all("tr")
 
-    if len(header_rows) == 1:
-        headers = [th.get_text(strip=True) for th in header_rows[0].find_all("th")]
-    else:
+    headers = []
+    ignore_rows = []
+    if len(header_rows) == 2:
         top_row = header_rows[0]
-        bottom_row = header_rows[1]
-
         expanded_top = []
         for th in top_row.find_all("th"):
             colspan = int(th.get("colspan", 1))
             text = th.get_text(strip=True)
             expanded_top.extend([text] * colspan)
+    for index, th in enumerate(header_rows[-1].find_all("th")):
+        normal_col = th.get_text(strip=True)
+        if len(header_rows) == 2:
+            top_col = expanded_top[index]
+            heading = f"{top_col} {normal_col}".strip() if top_col else normal_col
+        else:
+            heading = normal_col
+        if cols is None:
+            headers.append(heading)
+        elif heading in cols:
+            headers.append(heading)
+        else:
+            ignore_rows.append(index)
 
-        bottom = [th.get_text(strip=True) for th in bottom_row.find_all("th")]
-
-        headers = [
-            f"{top} {bottom}".strip() if top else bottom
-            for top, bottom in zip(expanded_top, bottom)
-        ]
     csv_string = ",".join(headers) + "\n"
-    for tr in table.find_all("tbody")[0].find_all("tr"):
+
+    for tr in table.find("tbody").find_all("tr"):
         cells = tr.find_all(["td", "th"])
-        row = [cell.get_text(strip=True) for cell in cells]
+        row = [
+            cell.get_text(strip=True)
+            for index, cell in enumerate(cells)
+            if index not in ignore_rows
+        ]
         if row:
             csv_string += ",".join(row) + "\n"
     return csv_string
