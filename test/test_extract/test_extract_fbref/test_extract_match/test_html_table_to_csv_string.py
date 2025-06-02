@@ -145,7 +145,6 @@ def test_html_table_to_csv_string_returns_table_with_two_dimensional_headers_cor
         + "Row2A,Row2B,Row2C,Row2D,Row2E,Row2F\n"
     )
     result = html_table_to_csv_string(input_val)
-    print(result)
     assert result == expected
 
 
