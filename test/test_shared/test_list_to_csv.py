@@ -9,7 +9,7 @@ def test_list_to_csv_returns_a_string():
 
 
 def test_list_to_csv_returns_one_heading_with_no_rows():
-    headings = "heading"
+    headings = ("heading",)
     result = list_to_csv(headings)
     expected = "heading\n"
     assert result == expected
