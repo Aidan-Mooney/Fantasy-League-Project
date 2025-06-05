@@ -198,6 +198,8 @@ def html_helper(rows):
 
 def process_match_summary(bucket, key_prefix, soup, log_messages):
     match_data = soup.find("div", {"id": "events_wrap"})
+    process_team_summary(bucket, key_prefix, match_data, "home", log_messages)
+    process_team_summary(bucket, key_prefix, match_data, "away", log_messages)
 
 
 def process_team_summary(bucket, key_prefix, match_data, team_side, log_messages):
