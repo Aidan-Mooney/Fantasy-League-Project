@@ -198,4 +198,24 @@ def html_helper(rows):
 
 
 def process_match_summary(bucket, soup):
+    match_data = soup.find("div", {"id": "events_wrap"})
     return
+
+
+def extract_summary(match_data, team_side):
+    if team_side == "home":
+        html_class = "event a"
+    elif team_side == "away":
+        html_class = "event b"
+    raw_div = match_data.find_all("div", {"class": html_class})
+    card_csv = "time,player,card\n"
+    sub_csv = "time,player OUT,player IN\n"
+    for event in raw_div:
+        breakdown = [x.strip() for x in event.text.split("\n") if x.strip() != ""]
+        time = breakdown[0].removesuffix("\u2019")
+        event_type = breakdown[-1].removeprefix("\u2014\xa0")
+        if event_type in ["Yellow Card", "Red Card", "Second Yellow Card"]:
+            card_csv += f"{time},{breakdown[2]},{event_type}\n"
+        elif event_type == "Substitute":
+            sub_csv += f"{time},{breakdown[2]},{breakdown[3].removeprefix('for ')}\n"
+    return card_csv, sub_csv
