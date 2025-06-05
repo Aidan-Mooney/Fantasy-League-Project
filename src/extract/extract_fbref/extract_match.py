@@ -33,7 +33,7 @@ def extract_match(event, context):
     process_match_tables(
         extract_bucket, key_prefix, raw_html_tables, table_schema, log_messages
     )
-    process_match_summary(extract_bucket, key_prefix, soup)
+    process_match_summary(extract_bucket, key_prefix, soup, log_messages)
     s3_client.put_object(
         Bucket=process_tracking_bucket,
         Key=f"{key_prefix}.json",
@@ -141,7 +141,6 @@ def process_table(
             Body=csv,
         )
         log_messages.append(f"processed {team_side} team {table_stat} table.")
-    return
 
 
 def html_table_to_csv_string(table, cols=None):
@@ -197,9 +196,20 @@ def html_helper(rows):
     return players
 
 
-def process_match_summary(bucket, soup):
+def process_match_summary(bucket, key_prefix, soup, log_messages):
     match_data = soup.find("div", {"id": "events_wrap"})
-    return
+
+
+def process_team_summary(bucket, key_prefix, match_data, team_side, log_messages):
+    card_csv, sub_csv = extract_summary(match_data, team_side)
+    s3_client.put_object(
+        Bucket=bucket, Key=f"{key_prefix}/{team_side}/card.csv", Body=card_csv
+    )
+    log_messages.append(f"processed {team_side} team card table.")
+    s3_client.put_object(
+        Bucket=bucket, Key=f"{key_prefix}/{team_side}/sub.csv", Body=sub_csv
+    )
+    log_messages.append(f"processed {team_side} team sub table.")
 
 
 def extract_summary(match_data, team_side):

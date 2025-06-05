@@ -9,19 +9,19 @@ def test_extract_summary_returns_a_tuple_of_strings():
     <div id="events_wrap">
         <div class="event a">
             20\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
@@ -51,7 +51,7 @@ def test_extract_summary_returns_csvs_with_one_yellow():
     <div id="events_wrap">
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             \u2014\xa0Yellow Card
         </div>
@@ -69,25 +69,25 @@ def test_extract_summary_returns_csvs_with_multiple_yellows():
     <div id="events_wrap">
         <div class="event a">
             10\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             20\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A4<br>
             \u2014\xa0Yellow Card
         </div>
@@ -111,25 +111,25 @@ def test_extract_summary_returns_csvs_with_multiple_reds():
     <div id="events_wrap">
         <div class="event a">
             10\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             \u2014\xa0Red Card
         </div>
         <div class="event a">
             20\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Red Card
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Red Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A4<br>
             \u2014\xa0Red Card
         </div>
@@ -153,25 +153,25 @@ def test_extract_summary_returns_csvs_with_multiple_second_yellows():
     <div id="events_wrap">
         <div class="event a">
             10\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             \u2014\xa0Second Yellow Card
         </div>
         <div class="event a">
             20\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Second Yellow Card
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Second Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A4<br>
             \u2014\xa0Second Yellow Card
         </div>
@@ -195,7 +195,7 @@ def test_extract_summary_returns_csvs_with_one_sub():
     <div id="events_wrap">
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
@@ -214,28 +214,28 @@ def test_extract_summary_returns_csvs_with_multiple_subs():
     <div id="events_wrap">
         <div class="event a">
             12\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             for Player A4<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A5<br>
             for Player A6<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             90\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A7<br>
             for Player A8<br>
             \u2014\xa0Substitute
@@ -260,7 +260,7 @@ def test_extract_summary_ignores_goals():
     <div id="events_wrap">
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             Assist:
             Player A2<br>
@@ -280,7 +280,7 @@ def test_extract_summary_can_handle_multiple_of_these_together():
     <div id="events_wrap">
         <div class="event a">
             6\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             Assist:
             Player A2<br>
@@ -288,40 +288,40 @@ def test_extract_summary_can_handle_multiple_of_these_together():
         </div>
         <div class="event a">
             12\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             for Player A4<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+4\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             50\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A5<br>
             for Player A6<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             90\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A7<br>
             for Player A8<br>
             \u2014\xa0Substitute
@@ -352,7 +352,7 @@ def test_extract_summary_ignores_the_other_side():
     <div id="events_wrap">
         <div class="event a">
             6\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             Assist:
             Player A2<br>
@@ -360,40 +360,40 @@ def test_extract_summary_ignores_the_other_side():
         </div>
         <div class="event a">
             12\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             for Player A4<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+4\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             50\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A5<br>
             for Player A6<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             90\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A7<br>
             for Player A8<br>
             \u2014\xa0Substitute
@@ -412,7 +412,7 @@ def test_extract_summary_still_extracts_their_side_whilst_ignoring_the_other():
     <div id="events_wrap">
         <div class="event a">
             6\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             Assist:
             Player A2<br>
@@ -420,53 +420,53 @@ def test_extract_summary_still_extracts_their_side_whilst_ignoring_the_other():
         </div>
         <div class="event a">
             12\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
         </div>
         <div class="event b">
             15\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A1<br>
             for Player A2<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+1\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             for Player A4<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             45+4\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A2<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             50\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event b">
             50\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A3<br>
             \u2014\xa0Yellow Card
         </div>
         <div class="event a">
             58\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A5<br>
             for Player A6<br>
             \u2014\xa0Substitute
         </div>
         <div class="event a">
             90\u2019<br>
-            1–0<br>
+            1\u20140<br>
             Player A7<br>
             for Player A8<br>
             \u2014\xa0Substitute
