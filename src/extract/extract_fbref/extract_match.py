@@ -46,7 +46,7 @@ def process_match_tables(
     bucket, key_prefix, raw_html_tables, table_schema: dict, log_messages
 ):
     home_team_info = process_lineup_data(raw_html_tables[0])
-    home_tables = raw_html_tables[3:10] + raw_html_tables[18]
+    home_tables = raw_html_tables[3:10] + [raw_html_tables[18]]
     process_team_tables(
         bucket,
         key_prefix,
@@ -58,7 +58,7 @@ def process_match_tables(
     )
 
     away_team_info = process_lineup_data(raw_html_tables[1])
-    away_tables = raw_html_tables[10:17] + raw_html_tables[19]
+    away_tables = raw_html_tables[10:17] + [raw_html_tables[19]]
     process_team_tables(
         bucket,
         key_prefix,
