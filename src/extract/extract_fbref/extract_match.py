@@ -42,6 +42,25 @@ def extract_match(event, context):
     return {}
 
 
+def validate_event(event: dict) -> None:
+    expected_keys = {"template", "league", "season", "fixture_id"}
+    if not isinstance(event, dict):
+        raise TypeError("event must be a dictionary")
+    actual_keys = set(event.keys())
+    if actual_keys != expected_keys:
+        raise TypeError(
+            "event must contain only the keys {'template', 'league', 'season', 'fixture_id'}"
+        )
+    elif not isinstance(event["template"], str):
+        raise TypeError("template value must be a string")
+    elif not isinstance(event["league"], str):
+        raise TypeError("league value must be a string")
+    elif not isinstance(event["season"], int):
+        raise TypeError("season value must be an int")
+    elif not isinstance(event["fixture_id"], str):
+        raise TypeError("fixture_id value must be a string")
+
+
 def process_match_tables(
     bucket, key_prefix, raw_html_tables, table_schema: dict, log_messages
 ):
