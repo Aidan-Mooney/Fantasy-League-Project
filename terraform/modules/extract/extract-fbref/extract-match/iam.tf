@@ -20,7 +20,7 @@ data "aws_iam_policy_document" "assume_lambda_role_document" {
 data "aws_iam_policy_document" "extract_match_put_object_policy_document" {
   statement {
     actions   = ["s3:PutObject"]
-    resources = ["${var.processed_codes_bucket_arn}/*","${var.extract_bucket_arn}"]
+    resources = ["${var.processed_codes_bucket_arn}/*","${var.extract_bucket_arn}/*"]
   }
 }
 
