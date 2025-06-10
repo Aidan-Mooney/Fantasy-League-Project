@@ -188,7 +188,9 @@ class TestGetMatchCodesLogsErrors:
             in caplog.text
         )
 
-    def test_extract_match_logs_a_s3_client_error(self, caplog, mock_processes):
+    def test_extract_match_logs_a_s3_client_error(
+        self, caplog, mock_requests_get, mock_processes
+    ):
         mock_pmt, _ = mock_processes
         error_response = {
             "Error": {
