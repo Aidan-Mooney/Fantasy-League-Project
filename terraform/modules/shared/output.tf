@@ -22,8 +22,19 @@ output processed_codes_name {
   value = aws_s3_bucket.fbref_fixture_tracker.id
 }
 
+
 output "processed_codes_arn" {
   value = aws_s3_bucket.fbref_fixture_tracker.arn
+}
+
+
+output "extract_bucket_name" {
+  value = aws_s3_bucket.fbref_extract_bucket.id
+}
+
+
+output  "extract_bucket_arn" {
+  value = aws_s3_bucket.fbref_extract_bucket.arn
 }
 
 
