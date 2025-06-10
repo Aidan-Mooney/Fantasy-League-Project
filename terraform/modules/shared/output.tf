@@ -8,6 +8,16 @@ output "code_bucket_policy_arn" {
 }
 
 
+output "template_bucket_name" {
+  value = aws_s3_bucket.template_bucket.bucket
+}
+
+
+output "template_bucket_policy_arn" {
+  value = aws_iam_policy.get_template_policy.arn
+}
+
+
 output processed_codes_name {
   value = aws_s3_bucket.fbref_fixture_tracker.id
 }
