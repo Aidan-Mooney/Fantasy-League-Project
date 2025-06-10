@@ -88,7 +88,7 @@ def get_url_and_regex(league: str, season: int) -> Tuple[str, str]:
 
 
 def get_processed_codes(league: str, season: int) -> List[str]:
-    bucket = environ["EXTRACT_BUCKET"]
+    bucket = environ["PROC_TRACK_BUCKET"]
     prefix = f"{league}/{season - 1}-{season}/"
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
     keys = [obj["Key"] for obj in response.get("Contents", [])]

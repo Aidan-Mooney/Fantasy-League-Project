@@ -12,4 +12,3 @@ resource "aws_s3_object" "get_match_codes_file" {
   source = data.archive_file.get_match_codes.output_path
   etag   = data.archive_file.get_match_codes.output_md5
 }
-
