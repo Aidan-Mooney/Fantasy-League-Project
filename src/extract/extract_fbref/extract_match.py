@@ -2,44 +2,97 @@ import re
 import json
 from os import environ
 from boto3 import client
+from logging import getLogger, basicConfig, INFO
+from requests.exceptions import HTTPError
+from botocore.exceptions import ClientError
 
 
 from get_soup import get_soup
 from list_to_csv import list_to_csv
 
 
+basicConfig(level=INFO)
+logger = getLogger(__name__)
 s3_client = client("s3")
 
 
 def extract_match(event, context):
-    process_tracking_bucket = environ["PROC_TRACK_BUCKET"]
-    extract_bucket = environ["EXTRACT_BUCKET"]
-    template_bucket = environ["TEMPLATE_BUCKET"]
+    try:
+        validate_event(event)
+    except TypeError as err:
+        logger.critical("Event validation failed: %s | Event: %s", err, event)
+        return {"success": False, "links": [], "error": str(err)}
 
     template = event["template"]
     league = event["league"]
     season = event["season"]
     fixture_id = event["fixture_id"]
+    key_prefix = f"{template}/{league}/{season - 1}-{season}/{fixture_id}"
 
-    response = s3_client.get_object(Bucket=template_bucket, Key=f"{template}.json")
-    table_schema = json.load(response["Body"])
+    process_tracking_bucket = environ["PROC_TRACK_BUCKET"]
+    extract_bucket = environ["EXTRACT_BUCKET"]
+    template_bucket = environ["TEMPLATE_BUCKET"]
+
     log_messages = []
 
-    url = f"https://fbref.com/en/matches/{fixture_id}"
-    soup = get_soup(url)
+    try:
+        url = f"https://fbref.com/en/matches/{fixture_id}"
+        soup = get_soup(url)
+    except HTTPError as err:
+        logger.critical(
+            "Failed to retrieve soup for league=%s, season=%s, fixture_id=%s: %s",
+            league,
+            season,
+            fixture_id,
+            err,
+        )
+        return {"success": False, "error": str(err)}
+
     raw_html_tables = soup.find_all(lambda tag: tag.name == "table")
 
-    key_prefix = f"{template}{league}/{season - 1}-{season}/{fixture_id}"
-    process_match_tables(
-        extract_bucket, key_prefix, raw_html_tables, table_schema, log_messages
+    try:
+        response = s3_client.get_object(Bucket=template_bucket, Key=f"{template}.json")
+        table_schema = json.load(response["Body"])
+    except ClientError as err:
+        logger.critical(
+            "Failed to fetch match template=%s for league=%s, season=%s: %s",
+            template,
+            league,
+            season,
+            err,
+        )
+        return {"success": False, "error": str(err)}
+
+    try:
+        process_match_tables(
+            extract_bucket, key_prefix, raw_html_tables, table_schema, log_messages
+        )
+        process_match_summary(extract_bucket, key_prefix, soup, log_messages)
+        s3_client.put_object(
+            Bucket=process_tracking_bucket,
+            Key=f"{key_prefix}.json",
+            Body="",
+        )
+    except ClientError as err:
+        logger.critical(
+            "Failed to put match data for template=%s, league=%s, season=%s, fixture_id=%s: %s",
+            template,
+            league,
+            season,
+            fixture_id,
+            err,
+        )
+        return {"success": False, "error": str(err)}
+    message = "\n".join(log_messages)
+    logger.info(
+        "Processed fixture fixture_id=%s for template=%s, league=%s, season=%s\n%s",
+        fixture_id,
+        template,
+        league,
+        season,
+        message,
     )
-    process_match_summary(extract_bucket, key_prefix, soup, log_messages)
-    s3_client.put_object(
-        Bucket=process_tracking_bucket,
-        Key=f"{key_prefix}.json",
-        Body="",
-    )
-    return {}
+    return {"success": True}
 
 
 def validate_event(event: dict) -> None:
