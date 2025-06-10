@@ -7,8 +7,8 @@ module "shared" {
 
 
 module "extract" {
+  source                            = "../modules/extract/extract-fbref/get-match-codes"
   project_prefix                    = "${local.project_name}-${local.stage}"
-  source                            = "../modules/extract"
   project_directory                 = local.project_directory
   code_bucket                       = module.shared.code_bucket_name
   code_bucket_get_object_policy_arn = module.shared.code_bucket_policy_arn
