@@ -24,4 +24,3 @@ resource "aws_lambda_function" "extract_match" {
     log_group   = var.log_group_name
   }
 }
-}
