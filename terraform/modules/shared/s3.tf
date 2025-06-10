@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "template_bucket" {
   bucket_prefix = "${var.project_prefix}-${local.template_prefix}"
   tags = {
-    purpose = "hold different templates for extraction, transformation and loading."
+    purpose = "hold different templates."
   }
 }
 
