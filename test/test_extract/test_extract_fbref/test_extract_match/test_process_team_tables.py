@@ -3,7 +3,7 @@ from unittest.mock import patch
 from bs4 import BeautifulSoup
 
 
-from extract.extract_fbref.extract_match import process_team_tables
+from extract.extract_fbref.extract_match import process_team_tables, table_name_dict
 
 
 MODULE_PATH = "extract.extract_fbref.extract_match"
@@ -26,12 +26,11 @@ def create_bucket(s3_client):
 
 @fixture(scope="function")
 def table_generator():
-    def _setup(team, number):
+    def _setup(number):
         html_string = ""
         for i in range(number):
             html_string += f"""
             <table>
-                <caption>{team} table name {i}</caption>
                 <thead>
                     <tr><th>ColA{i}</th><th>ColB{i}</th></tr>
                 </thead>
@@ -133,8 +132,8 @@ def test_prcoess_team_tables_processes_one_table(s3_client, table_generator):
     test_bench = [("12", "Sub1"), ("13", "Sub2")]
     test_team_info = test_team_name, test_formation, test_starters, test_bench
 
-    test_team_tables = table_generator(test_team_name, 1)
-    test_schema = {"table name 0": ["ColA0", "ColB0"]}
+    test_team_tables = table_generator(1)
+    test_schema = {"Summary": ["ColA0", "ColB0"]}
     log_messages = []
 
     process_team_tables(
@@ -147,7 +146,7 @@ def test_prcoess_team_tables_processes_one_table(s3_client, table_generator):
         log_messages,
     )
 
-    expected_table_name = "table name 0"
+    expected_table_name = "Summary"
     expected_table = "ColA0,ColB0\n" + "Row1A0,Row1B0\n" + "Row2A0,Row2B0\n"
     assert f"processed {team_side} team {expected_table_name} table." in log_messages
     response = s3_client.get_object(
@@ -170,13 +169,13 @@ def test_prcoess_team_tables_processes_multiple_tables(s3_client, table_generato
     test_bench = [("12", "Sub1"), ("13", "Sub2")]
     test_team_info = test_team_name, test_formation, test_starters, test_bench
 
-    test_team_tables = table_generator(test_team_name, 5)
+    test_team_tables = table_generator(5)
     test_schema = {
-        "table name 0": ["ColA0", "ColB0"],
-        "table name 1": ["ColA1", "ColB1"],
-        "table name 2": ["ColA2", "ColB2"],
-        "table name 3": ["ColA3", "ColB3"],
-        "table name 4": ["ColA4", "ColB4"],
+        "Summary": ["ColA0", "ColB0"],
+        "Passing": ["ColA1", "ColB1"],
+        "Pass Types": ["ColA2", "ColB2"],
+        "Defensive Actions": ["ColA3", "ColB3"],
+        "Possession": ["ColA4", "ColB4"],
     }
     log_messages = []
 
@@ -191,7 +190,7 @@ def test_prcoess_team_tables_processes_multiple_tables(s3_client, table_generato
     )
 
     for i in range(5):
-        expected_table_name = f"table name {i}"
+        expected_table_name = table_name_dict[i]
         expected_table = (
             f"ColA{i},ColB{i}\n" + f"Row1A{i},Row1B{i}\n" + f"Row2A{i},Row2B{i}\n"
         )
@@ -221,12 +220,12 @@ def test_prcoess_team_tables_processes_multiple_tables_ignoring_tables_not_in_sc
     test_bench = [("12", "Sub1"), ("13", "Sub2")]
     test_team_info = test_team_name, test_formation, test_starters, test_bench
 
-    test_team_tables = table_generator(test_team_name, 5)
+    test_team_tables = table_generator(5)
     test_schema = {
-        "table name 0": ["ColA0", "ColB0"],
-        "table name 1": ["ColA1", "ColB1"],
-        "table name 2": ["ColA2", "ColB2"],
-        "table name 3": ["ColA3", "ColB3"],
+        "Summary": ["ColA0", "ColB0"],
+        "Passing": ["ColA1", "ColB1"],
+        "Pass Types": ["ColA2", "ColB2"],
+        "Defensive Actions": ["ColA3", "ColB3"],
     }
     log_messages = []
 
@@ -241,7 +240,7 @@ def test_prcoess_team_tables_processes_multiple_tables_ignoring_tables_not_in_sc
     )
 
     for i in range(4):
-        expected_table_name = f"table name {i}"
+        expected_table_name = table_name_dict[i]
         expected_table = (
             f"ColA{i},ColB{i}\n" + f"Row1A{i},Row1B{i}\n" + f"Row2A{i},Row2B{i}\n"
         )
@@ -254,7 +253,7 @@ def test_prcoess_team_tables_processes_multiple_tables_ignoring_tables_not_in_sc
         )
         assert response["Body"].read().decode("utf-8") == expected_table
 
-    expected_table_name = f"table name {4}"
+    expected_table_name = table_name_dict[4]
     assert (
         f"processed {team_side} team {expected_table_name} table." not in log_messages
     )

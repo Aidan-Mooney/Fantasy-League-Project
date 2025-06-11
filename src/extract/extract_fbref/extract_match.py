@@ -16,6 +16,18 @@ logger = getLogger(__name__)
 s3_client = client("s3")
 
 
+table_name_dict = {
+    0: "Summary",
+    1: "Passing",
+    2: "Pass Types",
+    3: "Defensive Actions",
+    4: "Possession",
+    5: "Miscellaneous Stats",
+    6: "Goalkeeper",
+    7: "Shots",
+}
+
+
 def extract_match(event, context):
     try:
         validate_event(event)
@@ -159,7 +171,7 @@ def process_match_tables(
 def process_team_tables(
     bucket, key_prefix, team_side, team_info, team_tables, table_schema, log_messages
 ):
-    team, _, starters, bench = team_info
+    _, _, starters, bench = team_info
     starters_csv = list_to_csv(("Shirt Number", "Player"), starters)
     bench_csv = list_to_csv(("Shirt Number", "Player"), bench)
     s3_client.put_object(
@@ -171,9 +183,16 @@ def process_team_tables(
     )
     log_messages.append(f"processed {team_side} team bench.")
 
-    for table in team_tables:
+    for index, table in enumerate(team_tables):
+        table_name = table_name_dict[index]
         process_table(
-            bucket, key_prefix, team_side, team, table, table_schema, log_messages
+            bucket,
+            key_prefix,
+            team_side,
+            table_name,
+            table,
+            table_schema,
+            log_messages,
         )
 
 
@@ -199,20 +218,17 @@ def process_lineup_data(table):
 
 
 def process_table(
-    bucket, key_prefix, team_side, team, table, table_schema, log_messages
+    bucket, key_prefix, team_side, table_name, table, table_schema, log_messages
 ):
-    caption = table.find("caption")
-    table_name = caption.get_text(strip=True) if caption else "Unnamed Table"
-    table_stat = table_name.removeprefix(f"{team} ")
-    headings = table_schema.get(table_stat, None)
+    headings = table_schema.get(table_name, None)
     if headings is not None:
         csv = html_table_to_csv_string(table, headings)
         s3_client.put_object(
             Bucket=bucket,
-            Key=f"{key_prefix}/{team_side}/{table_stat}.csv",
+            Key=f"{key_prefix}/{team_side}/{table_name}.csv",
             Body=csv,
         )
-        log_messages.append(f"processed {team_side} team {table_stat} table.")
+        log_messages.append(f"processed {team_side} team {table_name} table.")
 
 
 def html_table_to_csv_string(table, cols=None):
