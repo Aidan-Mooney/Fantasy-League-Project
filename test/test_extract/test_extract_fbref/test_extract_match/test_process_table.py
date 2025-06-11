@@ -35,12 +35,10 @@ def soup_input_helper():
 
 def test_process_table_returns_none(soup_input_helper):
     test_prefix = "template/Premier-League/2024-2025/12345678"
-    test_team_name = "Test FC"
     test_table_name = "test table"
     team_side = "home"
-    input_html = f"""
+    input_html = """
     <table>
-        <caption>{test_team_name} {test_table_name}</caption>
         <thead>
             <tr><th>ColA</th><th>ColB</th></tr>
         </thead>
@@ -57,7 +55,7 @@ def test_process_table_returns_none(soup_input_helper):
         TEST_BUCKET,
         test_prefix,
         team_side,
-        test_team_name,
+        test_table_name,
         test_table,
         test_schema,
         log_messages,
@@ -69,12 +67,10 @@ def test_process_table_does_nothing_if_the_table_name_is_not_in_the_schema(
     soup_input_helper, s3_client
 ):
     test_prefix = "template/Premier-League/2024-2025/12345678"
-    test_team_name = "Test FC"
     test_table_name = "test table"
     team_side = "home"
-    input_html = f"""
+    input_html = """
     <table>
-        <caption>{test_team_name} {test_table_name}</caption>
         <thead>
             <tr><th>ColA</th><th>ColB</th></tr>
         </thead>
@@ -91,7 +87,7 @@ def test_process_table_does_nothing_if_the_table_name_is_not_in_the_schema(
         TEST_BUCKET,
         test_prefix,
         team_side,
-        test_team_name,
+        test_table_name,
         test_table,
         test_schema,
         log_messages,
@@ -105,12 +101,10 @@ def test_process_table_does_nothing_if_the_table_name_is_not_in_the_schema(
 
 def test_process_table_puts_table_and_logs_messages(soup_input_helper, s3_client):
     test_prefix = "template/Premier-League/2024-2025/12345678"
-    test_team_name = "Test FC"
     test_table_name = "test table"
     team_side = "home"
-    input_html = f"""
+    input_html = """
     <table>
-        <caption>{test_team_name} {test_table_name}</caption>
         <thead>
             <tr><th>ColA</th><th>ColB</th></tr>
         </thead>
@@ -127,7 +121,7 @@ def test_process_table_puts_table_and_logs_messages(soup_input_helper, s3_client
         TEST_BUCKET,
         test_prefix,
         team_side,
-        test_team_name,
+        test_table_name,
         test_table,
         test_schema,
         log_messages,
@@ -145,12 +139,10 @@ def test_process_table_puts_table_with_specific_columns_and_logs_messages(
     soup_input_helper, s3_client
 ):
     test_prefix = "template/Premier-League/2024-2025/12345678"
-    test_team_name = "Test FC"
     test_table_name = "test table"
     team_side = "home"
-    input_html = f"""
+    input_html = """
     <table>
-        <caption>{test_team_name} {test_table_name}</caption>
         <thead>
             <tr><th>ColA</th><th>ColB</th></tr>
         </thead>
@@ -167,7 +159,7 @@ def test_process_table_puts_table_with_specific_columns_and_logs_messages(
         TEST_BUCKET,
         test_prefix,
         team_side,
-        test_team_name,
+        test_table_name,
         test_table,
         test_schema,
         log_messages,
