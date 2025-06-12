@@ -23,12 +23,17 @@ def mock_get_fixtures():
 
 class TestGetMatchCodesFunctionality:
     def test_get_match_codes_returns_correct_types(self, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = ["code1234"]
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
@@ -44,12 +49,17 @@ class TestGetMatchCodesFunctionality:
         caplog,
         mock_get_fixtures,
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = []
         mock_proc_codes.return_value = []
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
@@ -66,12 +76,17 @@ class TestGetMatchCodesFunctionality:
         caplog,
         mock_get_fixtures,
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = []
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
@@ -86,12 +101,17 @@ class TestGetMatchCodesFunctionality:
     def test_get_match_codes_returns_only_codes_that_arent_in_bucket(
         self, caplog, mock_get_fixtures
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.return_value = ["code1234"]
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
@@ -113,14 +133,16 @@ class TestGetMatchCodesLogsErrors:
         assert not result["success"]
         assert len(result["links"]) == 0
         assert (
-            result["error"] == "event must contain only the keys {'league', 'season'}"
+            result["error"]
+            == "event must contain only the keys {'template', 'league', 'season'}"
         )
         assert (
-            "Event validation failed: event must contain only the keys {'league', 'season'}"
+            "Event validation failed: event must contain only the keys {'template', 'league', 'season'}"
             in caplog.text
         )
 
     def test_get_match_codes_logs_a_bad_http_request(self, caplog, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         test_url = f"https://fbref.com/en/comps/9/{test_season - 1}-{test_season}/schedule/{test_season - 1}-{test_season}-{test_league}-Scores-and-Fixtures"
@@ -133,7 +155,11 @@ class TestGetMatchCodesLogsErrors:
             f"403 Client Error: Forbidden for url: {response.url}", response=response
         )
         mock_all_codes.side_effect = error
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
@@ -146,6 +172,7 @@ class TestGetMatchCodesLogsErrors:
         )
 
     def test_get_match_codes_logs_a_s3_client_error(self, caplog, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
@@ -160,7 +187,11 @@ class TestGetMatchCodesLogsErrors:
         error = ClientError(error_response, operation_name)
         mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.side_effect = error
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
