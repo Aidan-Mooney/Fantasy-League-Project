@@ -1,0 +1,4 @@
+{
+    "Summary": ["Player","#","Nation","Pos","Age","Min","Performance Gls","Performance Ast"],
+    "Shots": ["Minute","Player","Squad","xG","PSxG"]
+}

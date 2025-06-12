@@ -1,7 +1,7 @@
-resource "aws_s3_bucket" "code_bucket" {
-  bucket_prefix = "${var.project_prefix}-${local.code_bucket_prefix}"
+resource "aws_s3_bucket" "template_bucket" {
+  bucket_prefix = "${var.project_prefix}-${local.template_prefix}"
   tags = {
-    purpose = "holds python code for lambda files."
+    purpose = "hold different templates."
   }
 }
 
@@ -11,6 +11,23 @@ resource "aws_s3_bucket" "fbref_fixture_tracker" {
   tags = {
     step = "extract"
     purpose = "hold codes of matches that have been processed."
+  }
+}
+
+
+resource "aws_s3_bucket" "fbref_extract_bucket" {
+  bucket_prefix = "${var.project_prefix}-${local.fbref_extract_bucket_prefix}"
+  tags = {
+    step = "extract"
+    purpose = "hold extracted data."
+  }
+}
+
+
+resource "aws_s3_bucket" "code_bucket" {
+  bucket_prefix = "${var.project_prefix}-${local.code_bucket_prefix}"
+  tags = {
+    purpose = "holds python code for lambda files."
   }
 }
 
