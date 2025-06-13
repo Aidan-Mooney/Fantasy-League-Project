@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "get_match_codes" {
   role                  = aws_iam_role.get_match_codes_role.arn
-  function_name         = "${var.project_prefix}-${local.get_match_codes_name}"
+  function_name         = "${var.project_prefix}-${local.get_match_codes_name}-"
   source_code_hash      = data.archive_file.get_match_codes.output_base64sha256
   s3_bucket             = aws_s3_object.get_match_codes_file.bucket
   s3_key                = aws_s3_object.get_match_codes_file.id
@@ -21,4 +21,10 @@ resource "aws_lambda_function" "get_match_codes" {
     log_format  = "Text"
     log_group   = var.log_group_name
   }
+}
+
+
+resource "aws_lambda_event_source_mapping" "example" {
+  event_source_arn = aws_sqs_queue.sqs_queue_test.arn
+  function_name    = aws_lambda_function.example.arn
 }

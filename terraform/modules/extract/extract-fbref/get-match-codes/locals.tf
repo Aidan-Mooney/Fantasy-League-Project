@@ -1,3 +1,3 @@
 locals {
-  get_match_codes_name = "get_match_codes"
+  get_match_codes_name = "get-match-codes"
 }
