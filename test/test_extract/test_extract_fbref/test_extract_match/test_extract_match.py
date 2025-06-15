@@ -70,18 +70,10 @@ class TestExtractMatchFunctionality:
         test_season = 2025
         fixture_id = "12345678"
         test_event = {
-            "Records": [
-                {
-                    "body": json.dumps(
-                        {
-                            "template": test_template,
-                            "league": test_league,
-                            "season": test_season,
-                            "fixture_id": fixture_id,
-                        }
-                    )
-                }
-            ]
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": fixture_id,
         }
         test_context = None
         result = extract_match(test_event, test_context)
@@ -98,18 +90,10 @@ class TestExtractMatchFunctionality:
         test_season = 2025
         fixture_id = "12345678"
         test_event = {
-            "Records": [
-                {
-                    "body": json.dumps(
-                        {
-                            "template": test_template,
-                            "league": test_league,
-                            "season": test_season,
-                            "fixture_id": fixture_id,
-                        }
-                    )
-                }
-            ]
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": fixture_id,
         }
         test_context = None
         extract_match(test_event, test_context)
@@ -131,18 +115,10 @@ class TestExtractMatchFunctionality:
         test_season = 2025
         fixture_id = "12345678"
         test_event = {
-            "Records": [
-                {
-                    "body": json.dumps(
-                        {
-                            "template": test_template,
-                            "league": test_league,
-                            "season": test_season,
-                            "fixture_id": fixture_id,
-                        }
-                    )
-                }
-            ]
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": fixture_id,
         }
         test_context = None
         extract_match(test_event, test_context)
@@ -167,7 +143,7 @@ class TestExtractMatchFunctionality:
 
 class TestGetMatchCodesLogsErrors:
     def test_extract_match_logs_an_invalid_event(self, caplog):
-        test_event = {"Records": [{"body": json.dumps({"invalid": "oh dear"})}]}
+        test_event = {"invalid": "oh dear"}
         test_context = None
         caplog.set_level(CRITICAL)
         result = extract_match(test_event, test_context)
@@ -196,18 +172,10 @@ class TestGetMatchCodesLogsErrors:
         )
 
         test_event = {
-            "Records": [
-                {
-                    "body": json.dumps(
-                        {
-                            "template": test_template,
-                            "league": test_league,
-                            "season": test_season,
-                            "fixture_id": fixture_id,
-                        }
-                    )
-                }
-            ]
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": fixture_id,
         }
         test_context = None
 
@@ -240,18 +208,10 @@ class TestGetMatchCodesLogsErrors:
         test_season = 2025
         fixture_id = "12345678"
         test_event = {
-            "Records": [
-                {
-                    "body": json.dumps(
-                        {
-                            "template": test_template,
-                            "league": test_league,
-                            "season": test_season,
-                            "fixture_id": fixture_id,
-                        }
-                    )
-                }
-            ]
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": fixture_id,
         }
         test_context = None
 

@@ -9,7 +9,6 @@ from botocore.exceptions import ClientError
 
 from get_soup import get_soup
 from list_to_csv import list_to_csv
-from get_sqs_body import get_sqs_body
 
 
 basicConfig(level=INFO)
@@ -30,18 +29,16 @@ table_name_dict = {
 
 
 def extract_match(event, context):
-    fixed_event = get_sqs_body(event)[0]
-
     try:
-        validate_event(fixed_event)
+        validate_event(event)
     except TypeError as err:
-        logger.critical("Event validation failed: %s | Event: %s", err, fixed_event)
+        logger.critical("Event validation failed: %s | Event: %s", err, event)
         return {"success": False, "links": [], "error": str(err)}
 
-    template = fixed_event["template"]
-    league = fixed_event["league"]
-    season = fixed_event["season"]
-    fixture_id = fixed_event["fixture_id"]
+    template = event["template"]
+    league = event["league"]
+    season = event["season"]
+    fixture_id = event["fixture_id"]
     key_prefix = f"{template}/{league}/{season - 1}-{season}/{fixture_id}"
 
     process_tracking_bucket = environ["PROC_TRACK_BUCKET"]
