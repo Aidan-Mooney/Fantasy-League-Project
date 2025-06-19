@@ -24,19 +24,3 @@ resource "aws_lambda_function" "extract_match" {
     log_group   = var.log_group_name
   }
 }
-
-
-resource "aws_lambda_event_source_mapping" "example" {
-  event_source_arn = aws_sqs_queue.fbref_match_queue.arn
-  function_name    = aws_lambda_function.extract_match.arn
-  batch_size       = 1
-}
-
-
-resource "aws_lambda_permission" "allow_sqs_invoke_lambda" {
-  statement_id  = "AllowExecutionFromSQS"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.extract_match.function_name
-  principal     = "sqs.amazonaws.com"
-  source_arn    = aws_sqs_queue.fbref_match_queue.arn
-}
