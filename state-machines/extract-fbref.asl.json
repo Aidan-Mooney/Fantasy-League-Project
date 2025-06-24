@@ -1,0 +1,78 @@
+{
+    "StartAt": "SQSInput",
+    "States": {
+        "SQSInput": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Next": "SQSOutput",
+            "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "${sqs_input}:$LATEST"
+            }
+        },
+        "SQSOutput": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Next": "FinishedCheck",
+            "Parameters": {
+                "Payload": {},
+                "FunctionName": "${sqs_output}:$LATEST"
+            },
+            "OutputPath": "$.Payload"
+        },
+        "FinishedCheck": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.is_finished",
+                    "BooleanEquals": true,
+                    "Next": "Done"
+                }
+            ],
+            "Default": "Delay"
+        },
+        "Delay": {
+            "Type": "Wait",
+            "Seconds": 6,
+            "Next": "DecideNext"
+        },
+        "DecideNext": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.func_name",
+                    "StringEquals": "funcA",
+                    "Next": "ExtractMatch"
+                },
+                {
+                    "Variable": "$.func_name",
+                    "StringEquals": "funcB",
+                    "Next": "GetMatchCodes"
+                }
+            ],
+            "Default": "Done"
+        },
+        "ExtractMatch": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Next": "SQSInput",
+            "Parameters": {
+                "Payload.$": "$.event",
+                "FunctionName": "${extract_match}:$LATEST"
+            }
+        },
+        "GetMatchCodes": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Next": "SQSOutput",
+            "Parameters": {
+                "Payload.$": "$.event",
+                "FunctionName": "${get_match_codes}:$LATEST"
+            },
+            "OutputPath": "$.Payload"
+        },
+        "Done": {
+            "Type": "Succeed"
+        }
+    }
+}
