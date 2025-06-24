@@ -15,7 +15,7 @@ def sqs_input(event, context):
         validate_event(event)
     except TypeError as err:
         logger.critical("Event validation failed: %s | Event: %s", err, event)
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "error": str(err)}
 
     QUEUE = environ["FBREF_QUEUE"]
     events = event["events"]
@@ -37,7 +37,7 @@ def sqs_input(event, context):
                 QUEUE,
                 err,
             )
-            return {"success": False, "links": [], "error": str(err)}
+            return {"success": False, "error": str(err)}
 
     return {"success": True}
 
