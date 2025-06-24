@@ -7,7 +7,10 @@ from botocore.exceptions import ClientError
 
 basicConfig(level=INFO)
 logger = getLogger(__name__)
-sqs_client = boto3.client("sqs")
+
+
+def get_sqs_client():
+    return boto3.client("sqs")
 
 
 def sqs_input(event, context):
@@ -56,6 +59,7 @@ def validate_event(event):
 
 
 def queue_event(queue, func_name, event):
+    sqs_client = get_sqs_client()
     output_event = {
         "func_name": func_name,
         "event": event,

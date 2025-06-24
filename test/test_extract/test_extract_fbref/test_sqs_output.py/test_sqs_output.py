@@ -15,7 +15,7 @@ TEST_QUEUE = "test-queue.fifo"
 
 @fixture(autouse=True)
 def patch_s3_client(sqs_client):
-    with patch(f"{MODULE_PATH}.sqs_client", sqs_client):
+    with patch(f"{MODULE_PATH}.get_sqs_client", return_value=sqs_client):
         yield
 
 

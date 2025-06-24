@@ -7,7 +7,10 @@ from botocore.exceptions import ClientError
 
 basicConfig(level=INFO)
 logger = getLogger(__name__)
-sqs_client = boto3.client("sqs")
+
+
+def get_sqs_client():
+    return boto3.client("sqs")
 
 
 def sqs_output(event, context):
@@ -25,6 +28,7 @@ def sqs_output(event, context):
 
 
 def receive_message(queue):
+    sqs_client = get_sqs_client()
     response = sqs_client.receive_message(
         QueueUrl=queue,
         MaxNumberOfMessages=1,
