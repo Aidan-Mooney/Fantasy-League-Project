@@ -22,9 +22,3 @@ resource "aws_lambda_function" "get_match_codes" {
     log_group   = var.log_group_name
   }
 }
-
-
-resource "aws_lambda_event_source_mapping" "example" {
-  event_source_arn = aws_sqs_queue.sqs_queue_test.arn
-  function_name    = aws_lambda_function.example.arn
-}
