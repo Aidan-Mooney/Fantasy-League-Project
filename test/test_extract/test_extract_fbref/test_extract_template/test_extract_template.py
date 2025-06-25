@@ -117,7 +117,7 @@ def test_extract_template_returns_one_event_with_one_league_and_one_season(
     test_id = "test_id"
     test_context = Context(test_id)
 
-    result = extract_template(test_event, test_context)
+    extract_template(test_event, test_context)
     exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025}
@@ -163,7 +163,7 @@ def test_extract_template_returns_correctly_with_one_league_and_multiple_seasons
     test_id = "test_id"
     test_context = Context(test_id)
 
-    result = extract_template(test_event, test_context)
+    extract_template(test_event, test_context)
     exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025},
@@ -224,7 +224,7 @@ def test_extract_template_returns_correctly_with_multiple_leagues_and_multiple_s
     test_id = "test_id"
     test_context = Context(test_id)
 
-    result = extract_template(test_event, test_context)
+    extract_template(test_event, test_context)
     exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025},
