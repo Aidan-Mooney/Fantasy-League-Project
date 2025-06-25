@@ -40,7 +40,18 @@ def mock_get_body():
         yield mock_get_body
 
 
-def test_extract_template_returns_correct_type(s3_setup):
+@fixture(scope="function")
+def mock_step_func():
+    with patch(f"{MODULE_PATH}.start_step_function") as mock_step_function_envoke:
+        yield mock_step_function_envoke
+
+
+class Context:
+    def __init__(self, aws_request_id):
+        self.aws_request_id = aws_request_id
+
+
+def test_extract_template_returns_correct_type(mock_step_func, s3_setup):
     test_key = "test-template.json"
     test_json = {
         "Premier-League": {
@@ -67,16 +78,18 @@ def test_extract_template_returns_correct_type(s3_setup):
             }
         ]
     }
-    test_context = None
+    test_id = "test_id"
+    test_context = Context(test_id)
 
     result = extract_template(test_event, test_context)
-    assert isinstance(result, dict)
-    assert len(result) == 2
-    assert isinstance(result["events"], list)
-    assert isinstance(result["func_name"], str)
+    assert result == {"success": True}
 
 
-def test_extract_template_returns_one_event_with_one_league_and_one_season(s3_setup):
+def test_extract_template_returns_one_event_with_one_league_and_one_season(
+    mock_step_func, s3_setup
+):
+    step_func = mock_step_func
+
     test_key = "test-template.json"
     test_json = {
         "Premier-League": {
@@ -101,20 +114,25 @@ def test_extract_template_returns_one_event_with_one_league_and_one_season(s3_se
             }
         ]
     }
-    test_context = None
+    test_id = "test_id"
+    test_context = Context(test_id)
 
     result = extract_template(test_event, test_context)
-    assert result == {
+    exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025}
         ],
         "func_name": "get_match_codes",
     }
+    assert step_func.call_args[0] == (test_id, exp_payload)
 
 
 def test_extract_template_returns_correctly_with_one_league_and_multiple_seasons(
+    mock_step_func,
     s3_setup,
 ):
+    step_func = mock_step_func
+
     test_key = "test-template.json"
     test_json = {
         "Premier-League": {
@@ -142,10 +160,11 @@ def test_extract_template_returns_correctly_with_one_league_and_multiple_seasons
             }
         ]
     }
-    test_context = None
+    test_id = "test_id"
+    test_context = Context(test_id)
 
     result = extract_template(test_event, test_context)
-    assert result == {
+    exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025},
             {"template": "test-template", "league": "Premier-League", "season": 2024},
@@ -154,11 +173,15 @@ def test_extract_template_returns_correctly_with_one_league_and_multiple_seasons
         ],
         "func_name": "get_match_codes",
     }
+    assert step_func.call_args[0] == (test_id, exp_payload)
 
 
 def test_extract_template_returns_correctly_with_multiple_leagues_and_multiple_seasons(
+    mock_step_func,
     s3_setup,
 ):
+    step_func = mock_step_func
+
     test_key = "test-template.json"
     test_json = {
         "Premier-League": {
@@ -198,10 +221,11 @@ def test_extract_template_returns_correctly_with_multiple_leagues_and_multiple_s
             }
         ]
     }
-    test_context = None
+    test_id = "test_id"
+    test_context = Context(test_id)
 
     result = extract_template(test_event, test_context)
-    assert result == {
+    exp_payload = {
         "events": [
             {"template": "test-template", "league": "Premier-League", "season": 2025},
             {"template": "test-template", "league": "Premier-League", "season": 2024},
@@ -218,6 +242,7 @@ def test_extract_template_returns_correctly_with_multiple_leagues_and_multiple_s
         ],
         "func_name": "get_match_codes",
     }
+    assert step_func.call_args[0] == (test_id, exp_payload)
 
 
 def test_extract_template_logs_client_errors(caplog, mock_get_body):
@@ -249,7 +274,8 @@ def test_extract_template_logs_client_errors(caplog, mock_get_body):
             }
         ]
     }
-    test_context = None
+    test_id = "test_id"
+    test_context = Context(test_id)
     caplog.set_level(CRITICAL)
     result = extract_template(test_event, test_context)
     assert not result["success"]
