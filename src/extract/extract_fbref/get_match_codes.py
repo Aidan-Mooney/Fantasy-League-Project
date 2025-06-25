@@ -53,7 +53,22 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
         league,
         season,
     )
-    return {"success": True, "links": links, "count": len(links)}
+    return change_output(template, league, season, links)
+
+
+def change_output(template, league, season, links):
+    return {
+        "events": [
+            {
+                "template": template,
+                "league": league,
+                "season": season,
+                "fixture_id": link,
+            }
+            for link in links
+        ],
+        "func_name": "extract_match",
+    }
 
 
 def validate_event(event: dict) -> None:

@@ -37,12 +37,9 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
-        assert len(result) == 3
-        assert isinstance(result["success"], bool)
-        assert isinstance(result["links"], list)
-        assert isinstance(result["count"], int)
-        for link in result["links"]:
-            assert isinstance(link, str)
+        assert len(result) == 2
+        assert isinstance(result["events"], list)
+        assert isinstance(result["func_name"], str)
 
     def test_get_match_codes_returns_empty_list_if_no_match_links_were_found(
         self,
@@ -63,9 +60,8 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert len(result["links"]) == 0
-        assert result["count"] == 0
+        assert len(result["events"]) == 0
+        assert result["func_name"] == "extract_match"
         assert (
             "Identified 0 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -90,9 +86,19 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert set(result["links"]) == {"code1234", "code5678"}
-        assert result["count"] == 2
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code1234",
+        } in result["events"]
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code5678",
+        } in result["events"]
+        assert result["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -115,9 +121,19 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert set(result["links"]) == {"code5678", "code1011"}
-        assert result["count"] == 2
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code1011",
+        } in result["events"]
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code5678",
+        } in result["events"]
+        assert result["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
