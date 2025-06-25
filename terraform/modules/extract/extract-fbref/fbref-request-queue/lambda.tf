@@ -27,7 +27,7 @@ resource "aws_lambda_function" "sqs_output" {
   runtime         = var.python_runtime
   timeout         = var.timeout
   handler         = "sqs_output.sqs_output"
-  description     = "Lambda function for adding messages to the queue: ${aws_sqs_queue.fbref_match_queue.id}."
+  description     = "Lambda function for receiving and deleting messages from the queue: ${aws_sqs_queue.fbref_match_queue.id}."
   environment {
     variables = { 
       FBREF_QUEUE = aws_sqs_queue.fbref_match_queue.id
