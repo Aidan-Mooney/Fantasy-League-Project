@@ -41,13 +41,13 @@
             "Choices": [
                 {
                     "Variable": "$.func_name",
-                    "StringEquals": "funcA",
+                    "StringEquals": "extract-match",
                     "Next": "ExtractMatch"
                 },
                 {
                     "Variable": "$.func_name",
                     "StringEquals": "funcB",
-                    "Next": "GetMatchCodes"
+                    "Next": "get-match-codes"
                 }
             ],
             "Default": "Done"
