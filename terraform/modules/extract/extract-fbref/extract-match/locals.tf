@@ -1,3 +1,3 @@
 locals {
-  extract_match_name = "extract_match"
+  extract_match_name = "extract-match"
 }

@@ -35,38 +35,42 @@ def s3_setup(s3_client):
 
 
 def test_get_processed_codes_returns_list_of_strings(s3_setup):
+    test_template = "template"
     test_league = "Premier-League"
     test_season = 2025
-    test_prefix = f"{test_league}/{test_season - 1}-{test_season}/"
+    test_prefix = f"{test_template}/{test_league}/{test_season - 1}-{test_season}/"
     test_keys = [f"{test_prefix}code1234.json"]
     s3_setup(test_keys)
-    output = get_processed_codes(test_league, test_season)
+    output = get_processed_codes(test_template, test_league, test_season)
     assert isinstance(output, list)
     for code in output:
         assert isinstance(code, str)
 
 
 def test_get_processed_codes_returns_empty_list():
+    test_template = "template"
     test_league = "Premier-League"
     test_season = 2025
-    output = get_processed_codes(test_league, test_season)
+    output = get_processed_codes(test_template, test_league, test_season)
     assert len(output) == 0
 
 
 def test_get_processed_codes_returns_one_code(s3_setup):
+    test_template = "template"
     test_league = "Premier-League"
     test_season = 2025
-    test_prefix = f"{test_league}/{test_season - 1}-{test_season}/"
+    test_prefix = f"{test_template}/{test_league}/{test_season - 1}-{test_season}/"
     test_keys = [f"{test_prefix}code1234.json"]
     s3_setup(test_keys)
-    output = get_processed_codes(test_league, test_season)
+    output = get_processed_codes(test_template, test_league, test_season)
     assert output == ["code1234"]
 
 
 def test_get_processed_codes_returns_multiple_codes(s3_setup):
+    test_template = "template"
     test_league = "Premier-League"
     test_season = 2025
-    test_prefix = f"{test_league}/{test_season - 1}-{test_season}/"
+    test_prefix = f"{test_template}/{test_league}/{test_season - 1}-{test_season}/"
     test_keys = [
         f"{test_prefix}code1234.json",
         f"{test_prefix}code5678.json",
@@ -74,5 +78,5 @@ def test_get_processed_codes_returns_multiple_codes(s3_setup):
         f"{test_prefix}code1213.json",
     ]
     s3_setup(test_keys)
-    output = get_processed_codes(test_league, test_season)
+    output = get_processed_codes(test_template, test_league, test_season)
     assert set(output) == {"code1234", "code5678", "code1011", "code1213"}

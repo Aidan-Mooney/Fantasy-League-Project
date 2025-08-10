@@ -20,6 +20,12 @@ def s3_client(aws_credentials):
         yield client("s3", region_name="eu-west-2")
 
 
+@fixture(scope="function")
+def sqs_client(aws_credentials):
+    with mock_aws():
+        yield client("sqs", region_name="eu-west-2")
+
+
 @fixture
 def mock_requests_get():
     with patch("get_soup.requests.get") as mock_get:
