@@ -61,13 +61,15 @@ def test_sqs_output_returns_a_dict_with_an_event_func_name_and_is_finished_bool(
     test_context = None
     result = sqs_output(test_event, test_context)
     assert isinstance(result, dict)
-    assert len(result) == 3
+    assert len(result) == 4
     assert "event" in result
     assert "func_name" in result
     assert "is_finished" in result
+    assert "success" in result
     assert isinstance(result["event"], dict)
     assert isinstance(result["func_name"], str)
     assert isinstance(result["is_finished"], bool)
+    assert isinstance(result["success"], bool)
 
 
 def test_sqs_output_returns_empty_event_and_func_name_with_true_is_finished():
@@ -77,6 +79,7 @@ def test_sqs_output_returns_empty_event_and_func_name_with_true_is_finished():
     assert result["event"] is None
     assert result["func_name"] is None
     assert result["is_finished"] is True
+    assert result["success"] is True
 
 
 def test_sqs_output_gets_the_func_and_event_from_queue_with_one_message(add_messages):
@@ -89,6 +92,7 @@ def test_sqs_output_gets_the_func_and_event_from_queue_with_one_message(add_mess
     assert result["event"] == {"test": "test"}
     assert result["func_name"] == "test_function"
     assert result["is_finished"] is False
+    assert result["success"] is True
 
 
 def test_sqs_output_gets_the_first_event_and_func_with_multiple_messages_in_queue(
