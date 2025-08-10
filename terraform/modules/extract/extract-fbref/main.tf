@@ -51,7 +51,7 @@ module "orchestration" {
   project_prefix      = var.project_prefix
   project_directory   = var.project_directory
   sqs_input_arn       = module.fbref_request_queue.sqs_input_func_arn
-  sqs_output_arn      = module.fbref_request_queue.sqs_input_func_arn
+  sqs_output_arn      = module.fbref_request_queue.sqs_output_func_arn
   extract_match_arn   = module.extract_match.extract_match_func_arn
   get_match_codes_arn = module.get_match_codes.get_match_codes_func_arn
 }
