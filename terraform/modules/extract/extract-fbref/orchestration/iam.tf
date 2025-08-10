@@ -23,10 +23,10 @@ data "aws_iam_policy_document" "invoke_lambdas_document" {
       "lambda:InvokeFunction"
     ]
     resources = [
-      var.sqs_input_arn,
-      var.sqs_output_arn,
-      var.extract_match_arn,
-      var.get_match_codes_arn
+      "${var.sqs_input_arn}:$LATEST",
+      "${var.sqs_output_arn}:$LATEST",
+      "${var.extract_match_arn}:$LATEST",
+      "${var.get_match_codes_arn}:$LATEST"
     ]
   }
 }
