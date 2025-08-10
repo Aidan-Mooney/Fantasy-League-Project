@@ -72,7 +72,7 @@ resource "aws_iam_role_policy_attachment" "sqs_funcs_code_policy" {
 }
 
 
-resource "aws_iam_role_policy_attachment" "sqs_funcs_code_policy" {
+resource "aws_iam_role_policy_attachment" "sqs_funcs_code_policy_attachment" {
   role       = aws_iam_role.sqs_output_role.name
   policy_arn = var.code_bucket_get_object_policy_arn
 }
