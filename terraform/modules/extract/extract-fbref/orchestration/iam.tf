@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "invoke_lambdas_document" {
 
 
 resource "aws_iam_policy" "invoke_lambdas_policy" {
-  name_prefix = "invoke-lambda-policy-for-${local.state_machine_prefix} state machine."
+  name_prefix = "invoke-lambda-policy-for-${local.state_machine_prefix}-state-machine."
   policy      = data.aws_iam_policy_document.invoke_lambdas_document.json
   description = "allows state machine to envoke lambda func it contains."
 }
