@@ -50,7 +50,7 @@
                     "Next": "GetMatchCodes"
                 }
             ],
-            "Default": "Done"
+            "Default": "FalseFinish"
         },
         "ExtractMatch": {
             "Type": "Task",
@@ -73,6 +73,9 @@
         },
         "Done": {
             "Type": "Succeed"
+        },
+        "FalseFinish": {
+            "Type": "Failure"
         }
     }
 }
