@@ -38,11 +38,12 @@ def receive_message(queue):
 
     messages = response.get("Messages", [])
     if not messages:
-        return {"event": None, "func_name": None, "is_finished": True}
+        return {"success": True, "event": None, "func_name": None, "is_finished": True}
 
     message = messages[0]
     sqs_client.delete_message(QueueUrl=queue, ReceiptHandle=message["ReceiptHandle"])
 
     return_info = json.loads(message["Body"])
     return_info["is_finished"] = False
+    return_info["success"] = True
     return return_info
