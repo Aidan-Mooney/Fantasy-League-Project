@@ -75,7 +75,7 @@
             "Type": "Succeed"
         },
         "FalseFinish": {
-            "Type": "Failure"
+            "Type": "Fail"
         }
     }
 }
