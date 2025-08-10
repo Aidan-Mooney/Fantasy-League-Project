@@ -66,13 +66,13 @@ resource "aws_iam_role_policy_attachment" "sqs_receive_and_delete_policy_attachm
 }
 
 
-resource "aws_iam_role_policy_attachment" "get_match_codes_code_policy" {
+resource "aws_iam_role_policy_attachment" "sqs_funcs_code_policy" {
   role       = aws_iam_role.sqs_input_role.name
   policy_arn = var.code_bucket_get_object_policy_arn
 }
 
 
-resource "aws_iam_role_policy_attachment" "get_match_codes_code_policy" {
+resource "aws_iam_role_policy_attachment" "sqs_funcs_code_policy" {
   role       = aws_iam_role.sqs_output_role.name
   policy_arn = var.code_bucket_get_object_policy_arn
 }
