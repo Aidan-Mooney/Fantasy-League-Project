@@ -1,7 +1,7 @@
 resource "aws_iam_role" "state_role" {
-  name_prefix        = "role-${locals.state_machine_prefix}"
+  name_prefix        = "role-${local.state_machine_prefix}"
   assume_role_policy = data.aws_iam_policy_document.assume_state_role_document.json
-  description        = "IAM role used by '${locals.state_machine_prefix}' state machine."
+  description        = "IAM role used by '${local.state_machine_prefix}' state machine."
 }
 
 
@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "invoke_lambdas_document" {
 
 
 resource "aws_iam_policy" "invoke_lambdas_policy" {
-  name_prefix = "invoke-lambda-policy-for-${locals.state_machine_prefix} state machine."
+  name_prefix = "invoke-lambda-policy-for-${local.state_machine_prefix} state machine."
   policy      = data.aws_iam_policy_document.invoke_lambdas_document.json
   description = "allows state machine to envoke lambda func it contains."
 }
