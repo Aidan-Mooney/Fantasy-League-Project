@@ -46,8 +46,8 @@
                 },
                 {
                     "Variable": "$.func_name",
-                    "StringEquals": "funcB",
-                    "Next": "get-match-codes"
+                    "StringEquals": "get-match-codes",
+                    "Next": "GetMatchCodes"
                 }
             ],
             "Default": "Done"
