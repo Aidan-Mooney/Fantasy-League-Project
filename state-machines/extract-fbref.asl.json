@@ -55,7 +55,7 @@
         "ExtractMatch": {
             "Type": "Task",
             "Resource": "arn:aws:states:::lambda:invoke",
-            "Next": "SQSInput",
+            "Next": "SQSOutput",
             "Parameters": {
                 "Payload.$": "$.event",
                 "FunctionName": "${extract_match}:$LATEST"
@@ -64,7 +64,7 @@
         "GetMatchCodes": {
             "Type": "Task",
             "Resource": "arn:aws:states:::lambda:invoke",
-            "Next": "SQSOutput",
+            "Next": "SQSInput",
             "Parameters": {
                 "Payload.$": "$.event",
                 "FunctionName": "${get_match_codes}:$LATEST"
