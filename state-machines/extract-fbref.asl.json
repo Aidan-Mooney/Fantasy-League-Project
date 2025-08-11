@@ -68,12 +68,12 @@
       "Choices": [
         {
           "Variable": "$.func_name",
-          "StringEquals": "extract-match",
+          "StringEquals": "extract_match",
           "Next": "ExtractMatch"
         },
         {
           "Variable": "$.func_name",
-          "StringEquals": "get-match-codes",
+          "StringEquals": "get_match_codes",
           "Next": "GetMatchCodes"
         }
       ],
