@@ -37,9 +37,10 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
-        assert len(result) == 2
+        assert len(result) == 3
         assert isinstance(result["events"], list)
         assert isinstance(result["func_name"], str)
+        assert isinstance(result["success"], bool)
 
     def test_get_match_codes_returns_empty_list_if_no_match_links_were_found(
         self,
