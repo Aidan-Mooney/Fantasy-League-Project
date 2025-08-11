@@ -11,5 +11,5 @@ locals {
 
 locals {
   python_runtime = "python3.12"
-  timeout = 10
+  timeout = 200
 }
