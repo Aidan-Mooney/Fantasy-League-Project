@@ -20,7 +20,7 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
         validate_event(event)
     except TypeError as err:
         logger.critical("Event validation failed: %s | Event: %s", err, event)
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
 
     template = event["template"]
     league = event["league"]
@@ -35,7 +35,7 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
             season,
             err,
         )
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
     try:
         extracted_matches = get_processed_codes(template, league, season)
     except ClientError as err:
@@ -45,7 +45,7 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
             season,
             err,
         )
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
     links = list(set(all_links) - set(extracted_matches))
     logger.info(
         "Identified %d new fixture links for league=%s, season=%s",
@@ -58,16 +58,18 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
 
 def change_output(template, league, season, links):
     return {
-        "events": [
-            {
-                "template": template,
-                "league": league,
-                "season": season,
-                "fixture_id": link,
-            }
-            for link in links
-        ],
-        "func_name": "extract_match",
+        "event": {
+            "events": [
+                {
+                    "template": template,
+                    "league": league,
+                    "season": season,
+                    "fixture_id": link,
+                }
+                for link in links
+            ],
+            "func_name": "extract_match",
+        },
         "success": True,
     }
 
