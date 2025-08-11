@@ -68,6 +68,7 @@ def change_output(template, league, season, links):
             for link in links
         ],
         "func_name": "extract_match",
+        "success": True,
     }
 
 
