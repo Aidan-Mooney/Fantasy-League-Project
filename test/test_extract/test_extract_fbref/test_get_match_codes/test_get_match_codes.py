@@ -37,10 +37,12 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
-        assert len(result) == 3
-        assert isinstance(result["events"], list)
-        assert isinstance(result["func_name"], str)
+        assert len(result) == 2
         assert isinstance(result["success"], bool)
+        assert isinstance(result["event"], dict)
+        assert len(result["event"]) == 2
+        assert isinstance(result["event"]["events"], list)
+        assert isinstance(result["event"]["func_name"], str)
 
     def test_get_match_codes_returns_empty_list_if_no_match_links_were_found(
         self,
@@ -61,8 +63,8 @@ class TestGetMatchCodesFunctionality:
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert len(result["events"]) == 0
-        assert result["func_name"] == "extract_match"
+        assert len(result["event"]["events"]) == 0
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 0 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -92,14 +94,14 @@ class TestGetMatchCodesFunctionality:
             "league": test_league,
             "season": test_season,
             "fixture_id": "code1234",
-        } in result["events"]
+        } in result["event"]["events"]
         assert {
             "template": test_template,
             "league": test_league,
             "season": test_season,
             "fixture_id": "code5678",
-        } in result["events"]
-        assert result["func_name"] == "extract_match"
+        } in result["event"]["events"]
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -127,14 +129,14 @@ class TestGetMatchCodesFunctionality:
             "league": test_league,
             "season": test_season,
             "fixture_id": "code1011",
-        } in result["events"]
+        } in result["event"]["events"]
         assert {
             "template": test_template,
             "league": test_league,
             "season": test_season,
             "fixture_id": "code5678",
-        } in result["events"]
-        assert result["func_name"] == "extract_match"
+        } in result["event"]["events"]
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -148,7 +150,7 @@ class TestGetMatchCodesLogsErrors:
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert (
             result["error"]
             == "event must contain only the keys {'template', 'league', 'season'}"
@@ -181,7 +183,7 @@ class TestGetMatchCodesLogsErrors:
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert result["error"] == f"403 Client Error: Forbidden for url: {test_url}"
         assert (
             "Failed to get fixture links for league=Premier-League, season=2025"
@@ -213,7 +215,7 @@ class TestGetMatchCodesLogsErrors:
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert (
             result["error"]
             == "An error occurred (InternalServiceError) when calling the ListObjectsV2 operation: An internal error occurred"
