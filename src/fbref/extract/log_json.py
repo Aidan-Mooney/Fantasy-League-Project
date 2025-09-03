@@ -1,4 +1,5 @@
 # from os import environ
+from datetime import datetime, timezone
 # import logging
 # from pythonjsonlogger import jsonlogger
 
@@ -14,6 +15,7 @@
 # logger.setLevel(logging.INFO)
 
 
-def log_json(event_name, extras):
-    # logger.info(event_name, extra=extras)
+def log_json(event_type, **log_info):
+    # log_info["time"] = datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+    # logger.info(event_type, extra=log_info)
     "nothing to see here yet"
