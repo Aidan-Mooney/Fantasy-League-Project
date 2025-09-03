@@ -5,6 +5,16 @@ from boto3 import client
 from moto import mock_aws
 
 
+TEST_LOG_PATH = "test-log-path"
+TEST_EXTRACT_BUCKET = "test-extract-bucket"
+TEST_PROCESS_TRACKING_BUCKET = "test-proc-track-bucket"
+
+
+environ["LOG_PATH"] = TEST_LOG_PATH
+environ["EXTRACT_BUCKET"] = TEST_EXTRACT_BUCKET
+environ["PROC_TRACK_BUCKET"] = TEST_PROCESS_TRACKING_BUCKET
+
+
 @fixture(scope="function")
 def aws_credentials():
     environ["AWS_ACCESS_KEY_ID"] = "test"
@@ -36,3 +46,18 @@ def mock_requests_get():
 
         mock_get.return_value = mock_response
         yield mock_get, mock_response
+
+
+@fixture(scope="session")
+def log_bath_name():
+    return TEST_LOG_PATH
+
+
+@fixture(scope="session")
+def extract_bucket_name():
+    return TEST_EXTRACT_BUCKET
+
+
+@fixture(scope="session")
+def proc_track_bucket_name():
+    return TEST_PROCESS_TRACKING_BUCKET
