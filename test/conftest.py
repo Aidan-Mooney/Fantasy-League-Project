@@ -5,9 +5,9 @@ from boto3 import client
 from moto import mock_aws
 
 
-TEST_LOG_PATH = "test-log-path"
-TEST_EXTRACT_BUCKET = "test-extract-bucket"
-TEST_PROCESS_TRACKING_BUCKET = "test-proc-track-bucket"
+TEST_LOG_PATH = "log-path"
+TEST_EXTRACT_BUCKET = "extract-bucket"
+TEST_PROCESS_TRACKING_BUCKET = "proc-track-bucket"
 
 
 environ["LOG_PATH"] = TEST_LOG_PATH
