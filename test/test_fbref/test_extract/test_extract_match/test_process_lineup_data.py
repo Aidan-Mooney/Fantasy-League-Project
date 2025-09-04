@@ -27,8 +27,7 @@ def mock_save():
 
 
 def test_process_lineup_data_returns_a_string(
-    soup_input_helper,
-    mock_save,
+    soup_input_helper, mock_save, extract_bucket_name
 ):
     test_template = "template"
     test_league = "Premier-League"
@@ -54,6 +53,7 @@ def test_process_lineup_data_returns_a_string(
     """
     input_val = soup_input_helper(test_html)
     result = process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
@@ -65,7 +65,7 @@ def test_process_lineup_data_returns_a_string(
 
 
 def test_process_lineup_data_returns_the_correct_formation(
-    soup_input_helper, mock_save
+    soup_input_helper, mock_save, extract_bucket_name
 ):
     test_template = "template"
     test_league = "Premier-League"
@@ -91,6 +91,7 @@ def test_process_lineup_data_returns_the_correct_formation(
     """
     input_val = soup_input_helper(test_html)
     result = process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
@@ -128,6 +129,7 @@ def test_process_lineup_data_saves_the_starters(
     """
     input_val = soup_input_helper(test_html)
     process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
@@ -184,6 +186,7 @@ def test_process_lineup_data_saves_the_bench(
     """
     input_val = soup_input_helper(test_html)
     process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
@@ -235,6 +238,7 @@ def test_process_lineup_data_saves_everything_correctly(
     """
     input_val = soup_input_helper(test_html)
     process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
@@ -315,6 +319,7 @@ def test_process_lineup_data_returns_everything_correctly_with_event_icons(
     """
     input_val = soup_input_helper(test_html)
     process_lineup_data(
+        extract_bucket_name,
         test_template,
         test_league,
         test_season,
