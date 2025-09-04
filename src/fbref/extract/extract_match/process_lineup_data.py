@@ -1,13 +1,9 @@
 import re
-from os import environ
 from fbref.extract.extract_match.html_helper import html_helper
 from fbref.extract.save_table_bytes import save_table_bytes
 
 
-EXTRACT_BUCKET = environ["EXTRACT_BUCKET"]
-
-
-def process_lineup_data(template, league, season, fixture_id, team_side, table):
+def process_lineup_data(bucket, template, league, season, fixture_id, team_side, table):
     rows = table.find_all("tr")
 
     first_header = rows[0].find("th").get_text(strip=True)
@@ -25,7 +21,7 @@ def process_lineup_data(template, league, season, fixture_id, team_side, table):
     starters_bytes = html_helper(rows[1:second_header_index])
     bench_bytes = html_helper(rows[second_header_index + 1 :])
     save_table_bytes(
-        EXTRACT_BUCKET,
+        bucket,
         f"{template}/{league}/{season - 1}-{season}/{fixture_id}/{team_side}/starters.csv",
         starters_bytes,
         template=template,
@@ -36,7 +32,7 @@ def process_lineup_data(template, league, season, fixture_id, team_side, table):
         table_name="starters",
     )
     save_table_bytes(
-        EXTRACT_BUCKET,
+        bucket,
         f"{template}/{league}/{season - 1}-{season}/{fixture_id}/{team_side}/bench.csv",
         bench_bytes,
         template=template,
