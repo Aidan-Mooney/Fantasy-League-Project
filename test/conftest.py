@@ -8,11 +8,13 @@ from moto import mock_aws
 TEST_LOG_PATH = "log-path"
 TEST_EXTRACT_BUCKET = "extract-bucket"
 TEST_PROCESS_TRACKING_BUCKET = "proc-track-bucket"
+TEST_TEMPLATE_BUCKET = "template-bucket"
 
 
 environ["LOG_PATH"] = TEST_LOG_PATH
 environ["EXTRACT_BUCKET"] = TEST_EXTRACT_BUCKET
 environ["PROC_TRACK_BUCKET"] = TEST_PROCESS_TRACKING_BUCKET
+environ["TEMPALTE_BUCKET"] = TEST_TEMPLATE_BUCKET
 
 
 @fixture(scope="function")
@@ -61,3 +63,8 @@ def extract_bucket_name():
 @fixture(scope="session")
 def proc_track_bucket_name():
     return TEST_PROCESS_TRACKING_BUCKET
+
+
+@fixture(scope="session")
+def template_bucket_name():
+    return TEST_TEMPLATE_BUCKET
