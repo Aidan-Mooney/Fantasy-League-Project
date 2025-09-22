@@ -49,10 +49,10 @@ def test_save_table_bytes_saves_correctly_and_logs_correctly_with_no_kwargs(
 
     mock_log_json.assert_called_once()
     args, kwargs = mock_log_json.call_args
-    msg, log_dict = args
+    msg = args[0]
     assert msg == "table save"
-    assert log_dict["success"] is True
-    assert log_dict["bytes"] == len(test_body)
+    assert kwargs["success"] is True
+    assert kwargs["bytes"] == len(test_body)
 
 
 def test_save_table_bytes_saves_correctly_and_logs_correctly_with_kwargs(
@@ -75,8 +75,8 @@ def test_save_table_bytes_saves_correctly_and_logs_correctly_with_kwargs(
 
     mock_log_json.assert_called_once()
     args, kwargs = mock_log_json.call_args
-    msg, log_dict = args
+    msg = args[0]
     assert msg == "table save"
-    assert log_dict["success"] is True
-    assert log_dict["bytes"] == len(test_body)
-    assert log_dict["test_kwarg"] == test_kwarg
+    assert kwargs["success"] is True
+    assert kwargs["bytes"] == len(test_body)
+    assert kwargs["test_kwarg"] == test_kwarg

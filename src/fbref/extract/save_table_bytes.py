@@ -36,4 +36,4 @@ def save_table_bytes(
     s3_client.put_object(Bucket=bucket, Key=file_name, Body=body)
     log_info["bytes"] = len(body)
     log_info["success"] = True
-    log_json(event_type, log_info)
+    log_json(event_type, **log_info)
