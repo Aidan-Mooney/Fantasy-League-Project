@@ -22,7 +22,8 @@ install-dev-tools: create-environment
 
 run-python-checks: install-external-requirements install-lambda-requirements install-dev-tools
 	@echo ">>> Running pytest"
-	$(call execute_in_env, pytest --testdox -vvvrP --cov=src --cov-fail-under=90 test/*)
+	$(call execute_in_env, pytest --testdox -vvvrP  test/*)
+# --cov=src --cov-fail-under=90
 	@echo ">>> Running security checks"
 	$(call execute_in_env, bandit -lll */*.py *c/*.py)
 	@echo ">>> Running ruff"

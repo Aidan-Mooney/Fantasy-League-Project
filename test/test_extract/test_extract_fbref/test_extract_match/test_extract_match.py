@@ -135,7 +135,7 @@ class TestExtractMatchFunctionality:
         assert pms_args == (
             EXTACT_BUCKET,
             test_prefix,
-            BeautifulSoup("<html><b><h1>Default Page</h1></b></html>"),
+            BeautifulSoup("<html><b><h1>Default Page</h1></b></html>", "html.parser"),
             [],
         )
         assert len(pms_kwargs) == 0

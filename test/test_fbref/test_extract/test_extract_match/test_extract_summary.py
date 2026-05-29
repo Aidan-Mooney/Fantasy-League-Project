@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 
-from extract.extract_fbref.extract_match import extract_summary
+from fbref.extract.extract_match.extract_summary import extract_summary
 
 
 def test_extract_summary_returns_a_tuple_of_strings():
@@ -31,8 +31,8 @@ def test_extract_summary_returns_a_tuple_of_strings():
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "home")
     assert isinstance(result, tuple)
-    assert isinstance(result[0], str)
-    assert isinstance(result[1], str)
+    assert isinstance(result[0], bytes)
+    assert isinstance(result[1], bytes)
 
 
 def test_extract_summary_returns_csvs_with_the_correct_headings():
@@ -42,8 +42,8 @@ def test_extract_summary_returns_csvs_with_the_correct_headings():
     soup = BeautifulSoup(html, "html.parser")
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "home")
-    assert result[0] == "time,player,card\n"
-    assert result[1] == "time,player OUT,player IN\n"
+    assert result[0] == "time,player,card\n".encode("utf-8")
+    assert result[1] == "time,player OUT,player IN\n".encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_one_yellow():
@@ -61,7 +61,7 @@ def test_extract_summary_returns_csvs_with_one_yellow():
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "home")
     expected = "time,player,card\n" + "45+1,Player A1,Yellow Card\n"
-    assert result[0] == expected
+    assert result[0] == expected.encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_multiple_yellows():
@@ -103,7 +103,7 @@ def test_extract_summary_returns_csvs_with_multiple_yellows():
         + "45+1,Player A3,Yellow Card\n"
         + "58,Player A4,Yellow Card\n"
     )
-    assert result[0] == expected
+    assert result[0] == expected.encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_multiple_reds():
@@ -145,7 +145,7 @@ def test_extract_summary_returns_csvs_with_multiple_reds():
         + "45+1,Player A3,Red Card\n"
         + "58,Player A4,Red Card\n"
     )
-    assert result[0] == expected
+    assert result[0] == expected.encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_multiple_second_yellows():
@@ -187,7 +187,7 @@ def test_extract_summary_returns_csvs_with_multiple_second_yellows():
         + "45+1,Player A3,Second Yellow Card\n"
         + "58,Player A4,Second Yellow Card\n"
     )
-    assert result[0] == expected
+    assert result[0] == expected.encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_one_sub():
@@ -206,7 +206,7 @@ def test_extract_summary_returns_csvs_with_one_sub():
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "home")
     expected = "time,player OUT,player IN\n" + "58,Player A1,Player A2\n"
-    assert result[1] == expected
+    assert result[1] == expected.encode("utf-8")
 
 
 def test_extract_summary_returns_csvs_with_multiple_subs():
@@ -252,7 +252,7 @@ def test_extract_summary_returns_csvs_with_multiple_subs():
         + "58,Player A5,Player A6\n"
         + "90,Player A7,Player A8\n"
     )
-    assert result[1] == expected
+    assert result[1] == expected.encode("utf-8")
 
 
 def test_extract_summary_ignores_goals():
@@ -271,8 +271,8 @@ def test_extract_summary_ignores_goals():
     soup = BeautifulSoup(html, "html.parser")
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "home")
-    assert result[0] == "time,player,card\n"
-    assert result[1] == "time,player OUT,player IN\n"
+    assert result[0] == "time,player,card\n".encode("utf-8")
+    assert result[1] == "time,player OUT,player IN\n".encode("utf-8")
 
 
 def test_extract_summary_can_handle_multiple_of_these_together():
@@ -343,8 +343,8 @@ def test_extract_summary_can_handle_multiple_of_these_together():
         + "58,Player A5,Player A6\n"
         + "90,Player A7,Player A8\n"
     )
-    assert result[0] == expected_cards
-    assert result[1] == expected_subs
+    assert result[0] == expected_cards.encode("utf-8")
+    assert result[1] == expected_subs.encode("utf-8")
 
 
 def test_extract_summary_ignores_the_other_side():
@@ -403,8 +403,8 @@ def test_extract_summary_ignores_the_other_side():
     soup = BeautifulSoup(html, "html.parser")
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "away")
-    assert result[0] == "time,player,card\n"
-    assert result[1] == "time,player OUT,player IN\n"
+    assert result[0] == "time,player,card\n".encode("utf-8")
+    assert result[1] == "time,player OUT,player IN\n".encode("utf-8")
 
 
 def test_extract_summary_still_extracts_their_side_whilst_ignoring_the_other():
@@ -476,5 +476,9 @@ def test_extract_summary_still_extracts_their_side_whilst_ignoring_the_other():
     soup = BeautifulSoup(html, "html.parser")
     test_match_data = soup.find("div", {"id": "events_wrap"})
     result = extract_summary(test_match_data, "away")
-    assert result[0] == "time,player,card\n" + "50,Player A3,Yellow Card\n"
-    assert result[1] == "time,player OUT,player IN\n" + "15,Player A1,Player A2\n"
+    assert result[0] == ("time,player,card\n" + "50,Player A3,Yellow Card\n").encode(
+        "utf-8"
+    )
+    assert result[1] == (
+        "time,player OUT,player IN\n" + "15,Player A1,Player A2\n"
+    ).encode("utf-8")

@@ -23,39 +23,48 @@ def mock_get_fixtures():
 
 class TestGetMatchCodesFunctionality:
     def test_get_match_codes_returns_correct_types(self, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = ["code1234"]
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         result = get_match_codes(test_event, test_context)
         assert isinstance(result, dict)
-        assert len(result) == 3
+        assert len(result) == 2
         assert isinstance(result["success"], bool)
-        assert isinstance(result["links"], list)
-        assert isinstance(result["count"], int)
-        for link in result["links"]:
-            assert isinstance(link, str)
+        assert isinstance(result["event"], dict)
+        assert len(result["event"]) == 2
+        assert isinstance(result["event"]["events"], list)
+        assert isinstance(result["event"]["func_name"], str)
 
     def test_get_match_codes_returns_empty_list_if_no_match_links_were_found(
         self,
         caplog,
         mock_get_fixtures,
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = []
         mock_proc_codes.return_value = []
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert len(result["links"]) == 0
-        assert result["count"] == 0
+        assert len(result["event"]["events"]) == 0
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 0 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -66,18 +75,33 @@ class TestGetMatchCodesFunctionality:
         caplog,
         mock_get_fixtures,
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678"]
         mock_proc_codes.return_value = []
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert set(result["links"]) == {"code1234", "code5678"}
-        assert result["count"] == 2
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code1234",
+        } in result["event"]["events"]
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code5678",
+        } in result["event"]["events"]
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -86,18 +110,33 @@ class TestGetMatchCodesFunctionality:
     def test_get_match_codes_returns_only_codes_that_arent_in_bucket(
         self, caplog, mock_get_fixtures
     ):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
         mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.return_value = ["code1234"]
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(INFO)
         result = get_match_codes(test_event, test_context)
-        assert result["success"]
-        assert set(result["links"]) == {"code5678", "code1011"}
-        assert result["count"] == 2
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code1011",
+        } in result["event"]["events"]
+        assert {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+            "fixture_id": "code5678",
+        } in result["event"]["events"]
+        assert result["event"]["func_name"] == "extract_match"
         assert (
             "Identified 2 new fixture links for league=Premier-League, season=2025"
             in caplog.text
@@ -111,16 +150,18 @@ class TestGetMatchCodesLogsErrors:
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert (
-            result["error"] == "event must contain only the keys {'league', 'season'}"
+            result["error"]
+            == "event must contain only the keys {'template', 'league', 'season'}"
         )
         assert (
-            "Event validation failed: event must contain only the keys {'league', 'season'}"
+            "Event validation failed: event must contain only the keys {'template', 'league', 'season'}"
             in caplog.text
         )
 
     def test_get_match_codes_logs_a_bad_http_request(self, caplog, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         test_url = f"https://fbref.com/en/comps/9/{test_season - 1}-{test_season}/schedule/{test_season - 1}-{test_season}-{test_league}-Scores-and-Fixtures"
@@ -133,12 +174,16 @@ class TestGetMatchCodesLogsErrors:
             f"403 Client Error: Forbidden for url: {response.url}", response=response
         )
         mock_all_codes.side_effect = error
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert result["error"] == f"403 Client Error: Forbidden for url: {test_url}"
         assert (
             "Failed to get fixture links for league=Premier-League, season=2025"
@@ -146,6 +191,7 @@ class TestGetMatchCodesLogsErrors:
         )
 
     def test_get_match_codes_logs_a_s3_client_error(self, caplog, mock_get_fixtures):
+        test_template = "template"
         test_league = "Premier-League"
         test_season = 2025
         mock_all_codes, mock_proc_codes = mock_get_fixtures
@@ -160,12 +206,16 @@ class TestGetMatchCodesLogsErrors:
         error = ClientError(error_response, operation_name)
         mock_all_codes.return_value = ["code1234", "code5678", "code1011"]
         mock_proc_codes.side_effect = error
-        test_event = {"league": test_league, "season": test_season}
+        test_event = {
+            "template": test_template,
+            "league": test_league,
+            "season": test_season,
+        }
         test_context = None
         caplog.set_level(CRITICAL)
         result = get_match_codes(test_event, test_context)
         assert not result["success"]
-        assert len(result["links"]) == 0
+        assert len(result["event"]) == 0
         assert (
             result["error"]
             == "An error occurred (InternalServiceError) when calling the ListObjectsV2 operation: An internal error occurred"

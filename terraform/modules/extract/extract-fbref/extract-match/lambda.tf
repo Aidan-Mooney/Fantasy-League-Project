@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "extract_match" {
   role                  = aws_iam_role.extract_match_role.arn
-  function_name         = "${var.project_prefix}-${local.extract_match_name}"
+  function_name         = "${var.project_prefix}-${local.extract_match_name}-"
   source_code_hash      = data.archive_file.extract_match.output_base64sha256
   s3_bucket             = aws_s3_object.extract_match_file.bucket
   s3_key                = aws_s3_object.extract_match_file.id

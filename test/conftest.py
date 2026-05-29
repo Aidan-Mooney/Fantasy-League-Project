@@ -5,6 +5,18 @@ from boto3 import client
 from moto import mock_aws
 
 
+TEST_LOG_PATH = "log-path"
+TEST_EXTRACT_BUCKET = "extract-bucket"
+TEST_PROCESS_TRACKING_BUCKET = "proc-track-bucket"
+TEST_TEMPLATE_BUCKET = "template-bucket"
+
+
+environ["LOG_PATH"] = TEST_LOG_PATH
+environ["EXTRACT_BUCKET"] = TEST_EXTRACT_BUCKET
+environ["PROC_TRACK_BUCKET"] = TEST_PROCESS_TRACKING_BUCKET
+environ["TEMPALTE_BUCKET"] = TEST_TEMPLATE_BUCKET
+
+
 @fixture(scope="function")
 def aws_credentials():
     environ["AWS_ACCESS_KEY_ID"] = "test"
@@ -20,6 +32,12 @@ def s3_client(aws_credentials):
         yield client("s3", region_name="eu-west-2")
 
 
+@fixture(scope="function")
+def sqs_client(aws_credentials):
+    with mock_aws():
+        yield client("sqs", region_name="eu-west-2")
+
+
 @fixture
 def mock_requests_get():
     with patch("get_soup.requests.get") as mock_get:
@@ -30,3 +48,23 @@ def mock_requests_get():
 
         mock_get.return_value = mock_response
         yield mock_get, mock_response
+
+
+@fixture(scope="session")
+def log_bath_name():
+    return TEST_LOG_PATH
+
+
+@fixture(scope="session")
+def extract_bucket_name():
+    return TEST_EXTRACT_BUCKET
+
+
+@fixture(scope="session")
+def proc_track_bucket_name():
+    return TEST_PROCESS_TRACKING_BUCKET
+
+
+@fixture(scope="session")
+def template_bucket_name():
+    return TEST_TEMPLATE_BUCKET

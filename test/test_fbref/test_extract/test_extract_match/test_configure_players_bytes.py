@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from pytest import fixture
 
 
-from extract.extract_fbref.extract_match import html_helper
+from fbref.extract.extract_match.configure_players_bytes import configure_players_bytes
 
 
 @fixture(scope="function")
@@ -27,29 +27,28 @@ def soup_rows_helper():
     return _setup
 
 
-def test_html_helper_returns_a_list_of_tuples_of_two_strings(soup_rows_helper):
+def test_configure_players_bytes_returns_a_list_of_tuples_of_two_strings(
+    soup_rows_helper,
+):
     players = [
         ("1", "Goalkeeper Smith"),
         ("2", "Defender Jones"),
         ("3", "Defender Pat"),
     ]
     input_vals = soup_rows_helper(players)
-    result = html_helper(input_vals)
-    assert isinstance(result, list)
-    for i in result:
-        assert isinstance(i, tuple)
-        assert isinstance(i[0], str)
-        assert isinstance(i[1], str)
+    result = configure_players_bytes(input_vals)
+    assert isinstance(result, bytes)
 
 
-def test_html_helper_returns_one_player_correctly(soup_rows_helper):
+def test_configure_players_bytes_returns_one_player_correctly(soup_rows_helper):
     players = [("1", "Goalkeeper Smith")]
     input_vals = soup_rows_helper(players)
-    result = html_helper(input_vals)
-    assert result == players
+    result = configure_players_bytes(input_vals)
+    expected = "Shirt Number,Player\n" + "1,Goalkeeper Smith\n"
+    assert result.decode() == expected
 
 
-def test_html_helper_returns_multiple_players_correctly(soup_rows_helper):
+def test_configure_players_bytes_returns_multiple_players_correctly(soup_rows_helper):
     players = [
         ("1", "Goalkeeper Smith"),
         ("2", "Defender Jones"),
@@ -64,11 +63,27 @@ def test_html_helper_returns_multiple_players_correctly(soup_rows_helper):
         ("11", "Forward Ainsworth"),
     ]
     input_vals = soup_rows_helper(players)
-    result = html_helper(input_vals)
-    assert result == players
+    result = configure_players_bytes(input_vals)
+    expected = (
+        "Shirt Number,Player\n"
+        + "1,Goalkeeper Smith\n"
+        + "2,Defender Jones\n"
+        + "3,Defender Pat\n"
+        + "4,Defender Gordon\n"
+        + "5,Defender McNulty\n"
+        + "6,Midfielder Bruno\n"
+        + "7,Midfielder Joey\n"
+        + "8,Midfielder Burn\n"
+        + "9,Midfielder Kyle\n"
+        + "10,Forward Mooney\n"
+        + "11,Forward Ainsworth\n"
+    )
+    assert result.decode() == expected
 
 
-def test_html_helper_returns_multiple_players_correctly_with_icons(soup_rows_helper):
+def test_configure_players_bytes_returns_multiple_players_correctly_with_icons(
+    soup_rows_helper,
+):
     players = [
         ("1", "Goalkeeper Smith"),
         ("2", "Defender Jones"),
@@ -83,5 +98,19 @@ def test_html_helper_returns_multiple_players_correctly_with_icons(soup_rows_hel
         ("11", "Forward Ainsworth"),
     ]
     input_vals = soup_rows_helper(players, True)
-    result = html_helper(input_vals)
-    assert result == players
+    result = configure_players_bytes(input_vals)
+    expected = (
+        "Shirt Number,Player\n"
+        + "1,Goalkeeper Smith\n"
+        + "2,Defender Jones\n"
+        + "3,Defender Pat\n"
+        + "4,Defender Gordon\n"
+        + "5,Defender McNulty\n"
+        + "6,Midfielder Bruno\n"
+        + "7,Midfielder Joey\n"
+        + "8,Midfielder Burn\n"
+        + "9,Midfielder Kyle\n"
+        + "10,Forward Mooney\n"
+        + "11,Forward Ainsworth\n"
+    )
+    assert result.decode() == expected

@@ -20,10 +20,12 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
         validate_event(event)
     except TypeError as err:
         logger.critical("Event validation failed: %s | Event: %s", err, event)
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
 
+    template = event["template"]
     league = event["league"]
     season = event["season"]
+
     try:
         all_links = get_all_codes(league, season)
     except HTTPError as err:
@@ -33,9 +35,9 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
             season,
             err,
         )
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
     try:
-        extracted_matches = get_processed_codes(league, season)
+        extracted_matches = get_processed_codes(template, league, season)
     except ClientError as err:
         logger.critical(
             "Failed to fetch processed match codes for league=%s, season=%s: %s",
@@ -43,7 +45,7 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
             season,
             err,
         )
-        return {"success": False, "links": [], "error": str(err)}
+        return {"success": False, "event": {}, "error": str(err)}
     links = list(set(all_links) - set(extracted_matches))
     logger.info(
         "Identified %d new fixture links for league=%s, season=%s",
@@ -51,16 +53,38 @@ def get_match_codes(event: dict, context: dict) -> List[str]:
         league,
         season,
     )
-    return {"success": True, "links": links, "count": len(links)}
+    return change_output(template, league, season, links)
+
+
+def change_output(template, league, season, links):
+    return {
+        "event": {
+            "events": [
+                {
+                    "template": template,
+                    "league": league,
+                    "season": season,
+                    "fixture_id": link,
+                }
+                for link in links
+            ],
+            "func_name": "extract_match",
+        },
+        "success": True,
+    }
 
 
 def validate_event(event: dict) -> None:
-    expected_keys = {"league", "season"}
+    expected_keys = {"template", "league", "season"}
     if not isinstance(event, dict):
         raise TypeError("event must be a dictionary")
     actual_keys = set(event.keys())
     if actual_keys != expected_keys:
-        raise TypeError("event must contain only the keys {'league', 'season'}")
+        raise TypeError(
+            "event must contain only the keys {'template', 'league', 'season'}"
+        )
+    elif not isinstance(event["template"], str):
+        raise TypeError("template value must be a string")
     elif not isinstance(event["league"], str):
         raise TypeError("league value must be a string")
     elif not isinstance(event["season"], int):
@@ -87,9 +111,9 @@ def get_url_and_regex(league: str, season: int) -> Tuple[str, str]:
     return url, regex_string
 
 
-def get_processed_codes(league: str, season: int) -> List[str]:
+def get_processed_codes(template: str, league: str, season: int) -> List[str]:
     bucket = environ["PROC_TRACK_BUCKET"]
-    prefix = f"{league}/{season - 1}-{season}/"
+    prefix = f"{template}/{league}/{season - 1}-{season}/"
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
     keys = [obj["Key"] for obj in response.get("Contents", [])]
     codes = [key.removeprefix(prefix).removesuffix(".json") for key in keys]

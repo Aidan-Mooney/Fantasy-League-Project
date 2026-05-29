@@ -1,0 +1,134 @@
+{
+  "StartAt": "SQSInput",
+  "States": {
+    "SQSInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Next": "CheckSuccessAfterSQSInput",
+      "Parameters": {
+        "Payload.$": "$.event",
+        "FunctionName": "${sqs_input}:$LATEST"
+      },
+      "OutputPath": "$.Payload"
+    },
+    "CheckSuccessAfterSQSInput": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.success",
+          "BooleanEquals": false,
+          "Next": "UnsuccessfulExecution"
+        }
+      ],
+      "Default": "SQSOutput"
+    },
+
+    "SQSOutput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Next": "CheckSuccessAfterSQSOutput",
+      "Parameters": {
+        "Payload": {},
+        "FunctionName": "${sqs_output}:$LATEST"
+      },
+      "OutputPath": "$.Payload"
+    },
+    "CheckSuccessAfterSQSOutput": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.success",
+          "BooleanEquals": false,
+          "Next": "UnsuccessfulExecution"
+        }
+      ],
+      "Default": "FinishedCheck"
+    },
+
+    "FinishedCheck": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.is_finished",
+          "BooleanEquals": true,
+          "Next": "Done"
+        }
+      ],
+      "Default": "Delay"
+    },
+
+    "Delay": {
+      "Type": "Wait",
+      "Seconds": 6,
+      "Next": "DecideNext"
+    },
+
+    "DecideNext": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.func_name",
+          "StringEquals": "extract_match",
+          "Next": "ExtractMatch"
+        },
+        {
+          "Variable": "$.func_name",
+          "StringEquals": "get_match_codes",
+          "Next": "GetMatchCodes"
+        }
+      ],
+      "Default": "UnsuccessfulExecution"
+    },
+
+    "ExtractMatch": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Next": "CheckSuccessAfterExtractMatch",
+      "Parameters": {
+        "Payload.$": "$.event",
+        "FunctionName": "${extract_match}:$LATEST"
+      },
+      "OutputPath": "$.Payload"
+    },
+    "CheckSuccessAfterExtractMatch": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.success",
+          "BooleanEquals": false,
+          "Next": "UnsuccessfulExecution"
+        }
+      ],
+      "Default": "SQSOutput"
+    },
+
+    "GetMatchCodes": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Next": "CheckSuccessAfterGetMatchCodes",
+      "Parameters": {
+        "Payload.$": "$.event",
+        "FunctionName": "${get_match_codes}:$LATEST"
+      },
+      "OutputPath": "$.Payload"
+    },
+    "CheckSuccessAfterGetMatchCodes": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.success",
+          "BooleanEquals": false,
+          "Next": "UnsuccessfulExecution"
+        }
+      ],
+      "Default": "SQSInput"
+    },
+
+    "Done": {
+      "Type": "Succeed"
+    },
+    "UnsuccessfulExecution": {
+      "Type": "Fail"
+    }
+  }
+}
