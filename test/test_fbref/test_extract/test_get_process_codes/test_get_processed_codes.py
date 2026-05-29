@@ -3,7 +3,7 @@ from os import environ
 from unittest.mock import patch
 
 
-from fbref.extract.get_processed_codes import get_processed_codes
+from fbref.extract.get_process_codes.get_processed_codes import get_processed_codes
 
 
 MODULE_PATH = "extract.extract_fbref.get_match_codes"

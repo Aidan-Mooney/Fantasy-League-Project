@@ -1,7 +1,8 @@
 from bs4 import Tag
+from typing import List
 
 
-def extract_match_row(row: Tag) -> str:
+def extract_match_row(row: Tag, fixture_ids: List[str]) -> str:
     if "spacer" in row.get("class", []):
         return ""
 
@@ -13,6 +14,14 @@ def extract_match_row(row: Tag) -> str:
     home = data["home_team"].get_text(strip=True)
     away = data["away_team"].get_text(strip=True)
 
+    new_row_string = f"{home},{away},{gameweek},{date},"
+
     score_cell = data.get("score").find("a")
-    fixture_id = score_cell["href"][12:20] if score_cell else None
-    return f"{home},{away},{gameweek},{date},{fixture_id}\n"
+    if score_cell:
+        fixture_id = score_cell["href"][12:20]
+        fixture_ids.append(fixture_id)
+        new_row_string += fixture_id
+    else:
+        new_row_string += "None"
+
+    return new_row_string + "\n"

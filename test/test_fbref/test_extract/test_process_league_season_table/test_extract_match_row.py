@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
 
 
-from fbref.extract.extract_match_row import extract_match_row
+from fbref.extract.process_league_season_table.extract_match_row import (
+    extract_match_row,
+)
 
 
 def test_extract_match_row_returns_a_str():
@@ -18,11 +20,12 @@ def test_extract_match_row_returns_a_str():
 
     soup = BeautifulSoup(html, "html.parser")
     test_row = soup.find("tr")
-    result = extract_match_row(test_row)
+    test_ids = []
+    result = extract_match_row(test_row, test_ids)
     assert isinstance(result, str)
 
 
-def test_extract_match_row_returns_empty_string_from_spacer():
+def test_extract_match_row_returns_empty_string_from_spacer_and_doesnt_affect_the_id_list():
     html = """<tr class="spacer partial_table result_all" style="background-color:#ddd">
         <th class="right iz" data-stat="gameweek" scope="row"></th>
         <td class="left iz" data-stat="dayofweek"></td>
@@ -34,11 +37,14 @@ def test_extract_match_row_returns_empty_string_from_spacer():
 
     soup = BeautifulSoup(html, "html.parser")
     test_row = soup.find("tr")
-    result = extract_match_row(test_row)
-    assert isinstance(result, str)
+    test_ids = []
+    ids_copy = test_ids.copy()
+    result = extract_match_row(test_row, test_ids)
+    assert result == ""
+    assert test_ids == ids_copy
 
 
-def test_extract_match_row_returns_info_with_no_fixture_id():
+def test_extract_match_row_returns_info_with_no_fixture_id_and_doesnt_affect_the_id_list():
     gameweek = 38
     home_team = "Arsenal"
     away_team = "Newcastle"
@@ -54,12 +60,15 @@ def test_extract_match_row_returns_info_with_no_fixture_id():
 
     soup = BeautifulSoup(html, "html.parser")
     test_row = soup.find("tr")
-    result = extract_match_row(test_row)
+    test_ids = []
+    ids_copy = test_ids.copy()
+    result = extract_match_row(test_row, test_ids)
     expected = f"{home_team},{away_team},{gameweek},{date},None\n"
     assert result == expected
+    assert test_ids == ids_copy
 
 
-def test_extract_match_row_returns_info_with_fixture_id():
+def test_extract_match_row_returns_info_with_fixture_id_and_adds_it_to_id_list():
     gameweek = 1
     home_team = "Liverpool"
     away_team = "Bournemouth"
@@ -78,6 +87,8 @@ def test_extract_match_row_returns_info_with_fixture_id():
 
     soup = BeautifulSoup(html, "html.parser")
     test_row = soup.find("tr")
-    result = extract_match_row(test_row)
+    test_ids = []
+    result = extract_match_row(test_row, test_ids)
     expected = f"{home_team},{away_team},{gameweek},{date},{fixture_id}\n"
     assert result == expected
+    assert test_ids[-1] == fixture_id
